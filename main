@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+#
+# ytw - wrapper for youtube
+
+list=false
+search=false
+dl=false
+video=false
+audio=false
+
+vidlist="/home/$USER/.config/playlist"
+
+usage(){
+cat << EOF
+
+Usage:
+	-l pick from a playlist
+	-s search on youtube
+	-d download (as an audio default)
+	-v download as a video
+	if a link passed it will be downloaded as an audio
+
+EOF
+}
+
+while getopts 'lsdvh' flag; do
+	case "${flag}" in
+		l)
+			list='true'
+			search='false'
+			dl='false'
+			audio='false'
+			video='false'
+			;;
+		s)
+			list='false'
+			search='true'
+			dl='false'
+			audio='false'
+			video='false'
+			;;
+		d)
+			list='false'
+			search='false'
+			dl='true'
+			audio='true'
+			video='false'
+			;;
+		v)
+			list='false'
+			search='false'
+			dl='true'
+			audio='false'
+			video='true'
+			;;
+		h)
+			usage
+			;;
+	esac
+done
+
+if [ $search = 'true' ]; then
+	choice=$(rofi -dmenu -p "search")
+	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+	linktoplay=https://www.youtube.com/watch\?v\="$yid"
+  	mpv "$linktoplay"
+fi
+
+if [ $list = 'true' ]; then
+	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | rofi -dmenu -p 'search' | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+fi
+
+if [ $dl = 'true' ]; then
+	choice=$(rofi -dmenu -p "dl")
+	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+	link=https://www.youtube.com/watch\?v\="$yid"
+	if [ $audio = 'true' ]; then
+  		youtube-dl --add-metadata --embed-thumbnail \
+			--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
+			--ignore-errors --restrict-filenames --verbose $link
+	elif [ $video = 'true' ]; then
+		youtube-dl $link -f best
+	fi
+fi
+
+if [ -z "$1" ]; then
+	usage
+fi
+
+case $1 in
+
+	*youtube.com* | *youtu.be* | *soundcloud.com*)
+		youtube-dl --add-metadata --embed-thumbnail \
+			--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
+			--ignore-errors --restrict-filenames --verbose $1
+	;;
+
+esac

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# prompt the user for a video title
+search="$(rofi -dmenu)"
+
+# put the title between '
+search="'$search'"
+
+# remove existing values
+rm values.json
+
+# generate json values
+python search.py -t "$search" > values.json
