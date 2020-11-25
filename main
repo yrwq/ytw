@@ -8,7 +8,8 @@ dl=false
 video=false
 audio=false
 
-vidlist="/home/$USER/.config/playlist"
+# vidlist="/home/$USER/.config/playlist"
+vidlist="$PWD/playlist"
 
 usage(){
 cat << EOF
