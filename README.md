@@ -16,11 +16,3 @@ Work in progress
 ## Installation
 
 ## Usage
-
-manually generate values
-
-./search.py -t "interesting title" > values.json
-
-generate values with rofi
-
-./generate
