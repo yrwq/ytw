@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-cat values.json | grep "title" | cut -d ':' -f 2 | sed 's/"//g' | sed 's/,//g'
+YTW_PATH=$HOME/.local/share/ytw
+
+cat $YTW_PATH/values.json | grep "title" | cut -d ':' -f 2 | sed 's/"//g' | sed 's/,//g'

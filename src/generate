@@ -1,5 +1,7 @@
 #!/bin/sh
 
+YTW_PATH=$HOME/.local/share/ytw
+
 # prompt the user for a video title
 search="$(rofi -dmenu -p Youtube)"
 
@@ -7,7 +9,7 @@ search="$(rofi -dmenu -p Youtube)"
 search="'$search'"
 
 # remove existing values
-rm values.json
+rm $YTW_PATH/values.json
 
 # generate json values
-python search.py -t "$search" > values.json
+python $YTW_PATH/search.py -t "$search" > $YTW_PATH/values.json
