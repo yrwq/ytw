@@ -10,6 +10,8 @@ A simple YouTube wrapper for lazy people, written in bash and python.
 
 ## Installation
 
+</div>
+
 Install known dependencies
 
 1. `sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl`
@@ -22,12 +24,12 @@ Install known dependencies
 
 	Running make will copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
+<div align="center">
 ## Usage
+</div>
 
 - `ytw -l`
 
 	Looks for a playlist file at `.local/share/ytw/playlist` and loads titles and urls from it.
 
 	You should use a <TAB> to seperate titles from urls.
-
-</div>
