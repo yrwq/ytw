@@ -10,6 +10,7 @@ options = "ht:"
 # Long options
 long_options = ["help", "title"]
 
+# Help message
 def help():
     print ("\nYoutube Search \n")
     print ("Usage:")

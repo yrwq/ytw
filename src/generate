@@ -8,8 +8,8 @@ search="$(rofi -dmenu -p Youtube)"
 # put the title between '
 search="'$search'"
 
-# remove existing values
-rm $YTW_PATH/values.json
+# if values.json exists, then remove
+[ -e $YTW_PATH/values.json ] && rm $YTW_PATH/values.json
 
 # generate json values
 python $YTW_PATH/search.py -t "$search" > $YTW_PATH/values.json
