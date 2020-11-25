@@ -33,8 +33,6 @@ Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
 ## Usage
 
-- `ytw -l`
+#### `ytw -h`
 
-	Looks for a playlist file at `.local/share/ytw/playlist` and loads titles and urls from it.
-
-	You should use a <TAB> to seperate titles from urls.
+#### `man ytw`

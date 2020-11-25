@@ -1,0 +1,42 @@
+.\" Manpage for ytw.
+
+.TH ytw 1 "25 Nov 2020" "1.0" "ytw man page"
+
+.SH NAME
+ytw \- YouTube Wrapper
+
+.SH SYNOPSIS
+ytw	[-lsdv]
+
+.SH DESCRIPTION
+YouTube wrapper written in bash and python, that means you don't have to use your browser for viewing/searching or downloading YouTube videos.
+
+.SH OPTIONS
+
+
+\f[B]-l\f[R]
+
+Playlist mode, looks for a playlist file at ~/.local/share/ytw/playlist and lists them in rofi. Pick one to play in mpv.
+
+
+\f[B]-s\f[R]
+
+Search mode, prompts the user for a title, list top 15 youtube results. Pick one to play in mpv.
+
+
+\f[B]-d\f[R]
+
+Download mode, prompts the user for a title, list top 15 youtube results. Pick one to download audio.
+
+\f[B]-v\f[R]
+
+Video mode, prompts the user for a title, list top 15 youtube results. Pick one to download video.
+
+.SH SEE ALSO
+dmenu(1), rofi(1), youtube-dl(1), mpv(1)
+
+.SH BUGS
+No known bugs.
+
+.SH AUTHOR
+Inhof Dávid (yrwqid@gmail.com)
