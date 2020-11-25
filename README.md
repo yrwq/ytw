@@ -1,5 +1,3 @@
-<div align="center">
-
 # YouTube Wrapper
 
 ---
@@ -9,8 +7,6 @@ A simple YouTube wrapper for lazy people, written in bash and python.
 > Imagine using a browser for YouTube ...
 
 ## Installation
-
-</div>
 
 Install known dependencies
 
@@ -24,9 +20,7 @@ Install known dependencies
 
 	Running make will copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
-<div align="center">
 ## Usage
-</div>
 
 - `ytw -l`
 
