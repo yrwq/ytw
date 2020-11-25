@@ -8,17 +8,21 @@ A simple YouTube wrapper for lazy people, written in bash and python.
 
 ## Installation
 
-Install known dependencies
+Install known dependencies.
 
 1. `sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl`
 
+Install required python packages.
+
 2. `pip install youtube-search-python`
+
+Clone this repository.
 
 3. `git clone https://github.com/yrwq/ytw && cd ytw`
 
-4. `make`
+Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
-	Running make will copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
+4. `make`
 
 ## Usage
 
