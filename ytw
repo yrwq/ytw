@@ -10,8 +10,11 @@ dl=false
 video=false
 audio=false
 
+# launch rofi with theese arguments
 rofi_args="-dmenu -p YouTube"
 
+# which menu/launcher to use
+# menu="dmenu -i -l 15"
 menu="rofi $rofi_args"
 
 # playlist file, used when -l argument passed
@@ -21,6 +24,11 @@ menu="rofi $rofi_args"
 
 # vidlist="/home/$USER/.config/playlist"
 vidlist="$PWD/playlist"
+
+# audio download args
+ytdl_args="--add-metadata --embed-thumbnail \
+	--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
+	--ignore-errors --restrict-filenames --verbose $link"
 
 # help message
 usage(){
@@ -74,27 +82,44 @@ while getopts 'lsdvh' flag; do
 done
 
 # search with rofi and play with mpv
+# -s
 if [ $search = 'true' ]; then
+	# generate the json file
 	./generate
+
+	# clean up json, only pipe actual titles to menu
 	choice=$(./getlist | $menu)
-	# choice=$(rofi -dmenu -p "search")
-	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-	linktoplay=https://www.youtube.com/watch\?v\="$yid"
-  	mpv "$linktoplay"
-fi
 
-if [ $list = 'true' ]; then
-	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | rofi -dmenu -p 'search' | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
-fi
-
-if [ $dl = 'true' ]; then
-	choice=$(rofi -dmenu -p "dl")
+	# search on youtube
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 	link=https://www.youtube.com/watch\?v\="$yid"
+
+	# play the final link in mpv
+  	mpv "$link"
+fi
+
+# playlist
+# -p
+if [ $list = 'true' ]; then
+	# stole this from Luke Smith @lukesmithxyz
+	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+fi
+
+# download audio
+# -d
+if [ $dl = 'true' ]; then
+	# generate the json file
+	./generate
+
+	# clean up json, only pipe actual titles to menu
+	choice=$(./getlist | $menu)
+
+	# search on youtube
+	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+	link=https://www.youtube.com/watch\?v\="$yid"
+
 	if [ $audio = 'true' ]; then
-  		youtube-dl --add-metadata --embed-thumbnail \
-			--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
-			--ignore-errors --restrict-filenames --verbose $link
+		youtube-dl $ytdl_args
 	elif [ $video = 'true' ]; then
 		youtube-dl $link -f best
 	fi
