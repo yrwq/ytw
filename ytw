@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
 # ytw - wrapper for youtube
-# dependencies: mpv, rofi, youtube-dl, python
+# dependencies: mpv, rofi, youtube-dl, python, sed, awk
+
+YTW_PATH=$HOME/.local/share/ytw/
 
 # default settings, when you launch the script without arguments
 list=false
@@ -23,7 +25,7 @@ menu="rofi $rofi_args"
 # title		url
 
 # vidlist="/home/$USER/.config/playlist"
-vidlist="$PWD/playlist"
+vidlist="$YTW_PATH/playlist"
 
 # audio download args
 ytdl_args="--add-metadata --embed-thumbnail \
