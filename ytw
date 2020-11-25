@@ -125,16 +125,16 @@ if [ $dl = 'true' ]; then
 	fi
 fi
 
+# if launched without arguments, show help message
 if [ -z "$1" ]; then
 	usage
 fi
 
+# if argument is an url, download it as an audio
 case $1 in
 
 	*youtube.com* | *youtu.be* | *soundcloud.com*)
-		youtube-dl --add-metadata --embed-thumbnail \
-			--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
-			--ignore-errors --restrict-filenames --verbose $1
+		youtube-dl $ytdl_args $1
 	;;
 
 esac
