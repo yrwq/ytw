@@ -4,12 +4,15 @@ Search, download, watch youtube.
 
 Work in progress
 
-## Requirements
+## Features
+
+## Dependencies
 
 - `bash`
 - `python`
 - `mpv`
 - `rofi / dmenu / fzf `
+- `youtube-dl`
 
 `pip install youtube-search-python`
 
