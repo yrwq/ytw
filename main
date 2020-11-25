@@ -15,11 +15,11 @@ usage(){
 cat << EOF
 
 Usage:
-	-l pick from a playlist
-	-s search on youtube
-	-d download (as an audio default)
-	-v download as a video
-	if a link passed it will be downloaded as an audio
+	ytw -l		pick from a playlist
+	ytw -s		search on youtube
+	ytw -d 		download audio
+	ytw -v 		download video
+	ytw <url>	download url as audio
 
 EOF
 }
@@ -60,8 +60,11 @@ while getopts 'lsdvh' flag; do
 	esac
 done
 
+# search with rofi
 if [ $search = 'true' ]; then
-	choice=$(rofi -dmenu -p "search")
+	./generate
+	choice=$(./getlist | rofi -dmenu)
+	# choice=$(rofi -dmenu -p "search")
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 	linktoplay=https://www.youtube.com/watch\?v\="$yid"
   	mpv "$linktoplay"

@@ -31,7 +31,7 @@ try:
             help()
 
         elif currentArgument in ("-t", "--title"):
-            search = SearchVideos(sys.argv[2], offset = 1, mode = "json", max_results = 5)
+            search = SearchVideos(sys.argv[2], offset = 1, mode = "json", max_results = 10)
             print(search.result())
         else:
             help()
