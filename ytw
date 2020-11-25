@@ -28,7 +28,7 @@ vidlist="$PWD/playlist"
 # audio download args
 ytdl_args="--add-metadata --embed-thumbnail \
 	--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
-	--ignore-errors --restrict-filenames --verbose $link"
+	--ignore-errors --restrict-filenames --verbose"
 
 # help message
 usage(){
@@ -119,7 +119,7 @@ if [ $dl = 'true' ]; then
 	link=https://www.youtube.com/watch\?v\="$yid"
 
 	if [ $audio = 'true' ]; then
-		youtube-dl $ytdl_args
+		youtube-dl $ytdl_args $link
 	elif [ $video = 'true' ]; then
 		youtube-dl $link -f best
 	fi
