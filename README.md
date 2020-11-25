@@ -36,3 +36,5 @@ Work in progress
 - getlist
 
 	Prints existing values.json to stdout.
+
+	`./getlist`
