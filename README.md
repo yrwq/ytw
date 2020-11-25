@@ -1,10 +1,14 @@
 # YouTube Wrapper
 
----
 
-A simple YouTube wrapper for lazy people, written in bash and python.
+<div align="center"> A simple YouTube wrapper for lazy people, written in bash and python. </div>
+
+<img src=".assets/preview.gif" align="center">
+
 
 > Imagine using a browser for YouTube ...
+
+---
 
 ## Installation
 
