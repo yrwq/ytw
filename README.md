@@ -32,13 +32,14 @@ Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
 ## Usage
 
-| Command         | What it does              |
-| :-------------: | :-------------:           |
-| ytw             | launch ytw with a menu    |
-| ytw -s          | search and play with mpv  |
-| ytw -l          | play a video from a list  |
-| ytw -d          | search and download audio |
-| ytw -d          | search and download video |
-| ytw -h          | show help message         |
+| Command              | What it does                        |
+| :-------------:      | :-------------:                     |
+| ytw                  | launch ytw with a menu              |
+| ytw -s               | search and play with mpv            |
+| ytw -l               | play a video from a local playlist  |
+| ytw -l /path/to/list | play a video from a local playlist  |
+| ytw -d               | search and download audio           |
+| ytw -d               | search and download video           |
+| ytw -h               | show help message                   |
 
 For more information take a look at the manual. `man ytw`
