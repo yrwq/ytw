@@ -28,7 +28,7 @@ Clone this repository.
 
 Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
-4. `make`
+4. `sudo make install`
 
 ## Usage
 
