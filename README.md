@@ -11,7 +11,6 @@
 
 > Imagine using a browser for YouTube ...
 
----
 
 ## Installation
 
@@ -33,6 +32,6 @@ Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
 ## Usage
 
-#### `ytw -h`
+`ytw -h`
 
-#### `man ytw`
+`man ytw`
