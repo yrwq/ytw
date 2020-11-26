@@ -125,7 +125,13 @@ fi
 # -p
 if [ $list = 'true' ]; then
 	# stole this from Luke Smith @lukesmithxyz
-	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+	if [ -z "$2" ]; then
+		cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+	fi
+
+	if [ -n "$2" ]; then
+		cat "$2" | grep -P "^$(cat "$2" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+	fi
 fi
 
 # download audio
