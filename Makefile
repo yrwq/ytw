@@ -1,11 +1,23 @@
+DATDIR = $$HOME/.local/share/ytw/
+BINDIR = $$HOME/.local/bin
+MANDIR = /usr/share/man/man1/
+INSDIR = /usr/local/bin/ytw
+
 all:
-	mkdir -p ~/.local/share/ytw
-	cp src/generate ~/.local/share/ytw/
-	cp src/getlist ~/.local/share/ytw/
-	cp src/search.py ~/.local/share/ytw/
+	mkdir -p ${DATDIR}
+	cp src/generate ${DATDIR}
+	cp src/getlist ${DATDIR}
+	cp src/search.py ${DATDIR}
+	cp ytw ${BINDIR}/
+
+man:
+	install -g 0 -o 0 -m 0644 ytw.1 ${MANDIR}
 
 install:
-	install -g 0 -o 0 -m 0644 ytw.1 /usr/share/man/man1/
-	cp ytw /usr/local/bin/
+	cp ytw ${INSDIR}
+
 uninstall:
-	rm -rf ~/.local/share/ytw/
+	rm -rf ${DATDIR}
+	sudo rm -rf ${INSDIR}
+	sudo rm -rf ${MANDIR}
+	rm -rf ${BINDIR}/ytw

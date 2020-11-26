@@ -26,9 +26,9 @@
 
 	`git clone https://github.com/yrwq/ytw && cd ytw`
 
-3. Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
+3. Copy files
 
-	`sudo make install`
+	`make && sudo make install`
 
 
 
