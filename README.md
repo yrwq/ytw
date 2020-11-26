@@ -20,7 +20,7 @@
 
 	`pip install youtube-search-python`
 
-	`yay -Sy nerd-fonts-hack` (optional)
+	`yay -Sy nerd-fonts-hack`
 
 2. Clone this repository.
 
