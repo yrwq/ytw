@@ -30,6 +30,8 @@ Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
 4. `sudo make install`
 
+5. Install a [nerd font](https://github.com/ryanoasis/nerd-fonts) (optional)
+
 ## Usage
 
 | Command              | What it does                        |
