@@ -83,6 +83,27 @@ while getopts 'lsdvh' flag; do
 	esac
 done
 
+main(){
+	choice=$(echo -ne "Search\n\
+Playlist\n\
+Audio\n\
+Video" | $menu)
+	case $choice in
+		Search)
+			ytw -s
+		;;
+		Playlist)
+			ytw -l
+		;;
+		Audio)
+			ytw -d
+		;;
+		Video)
+			ytw -v
+		;;
+	esac
+}
+
 # search with rofi and play with mpv
 # -s
 if [ $search = 'true' ]; then
@@ -127,10 +148,6 @@ if [ $dl = 'true' ]; then
 	fi
 fi
 
-# if launched without arguments, show help message
-if [ -z "$1" ]; then
-	usage
-fi
 
 # if argument is an url, download it as an audio
 case $1 in
@@ -140,3 +157,8 @@ case $1 in
 	;;
 
 esac
+
+# if launched without arguments, show help message
+if [ -z "$1" ]; then
+	main
+fi
