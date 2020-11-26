@@ -14,23 +14,23 @@
 
 ## Installation
 
-Install known dependencies.
+1. Install known dependencies.
 
-1. `sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl`
+	`sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl`
 
-Install required python packages.
+	`pip install youtube-search-python`
 
-2. `pip install youtube-search-python`
+	`yay -Sy nerd-fonts-hack` (optional)
 
-Clone this repository.
+2. Clone this repository.
 
-3. `git clone https://github.com/yrwq/ytw && cd ytw`
+	`git clone https://github.com/yrwq/ytw && cd ytw`
 
-Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
+3. Run make to copy ytw to ~/.local/bin and needed scripts to ~/.local/share/ytw
 
-4. `sudo make install`
+	`sudo make install`
 
-5. Install a [nerd font](https://github.com/ryanoasis/nerd-fonts) (optional)
+
 
 ## Usage
 
