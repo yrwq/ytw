@@ -83,12 +83,13 @@ while getopts 'lsdvh' flag; do
 	esac
 done
 
-choices="Search\nPlaylist\nAudio\nVideo\n
+choices=" Search\n Playlist\n Audio\n Video\n
 "
 
 main(){
 	choice=$(echo -ne ${choices} | $menu)
-	case ${choice,,} in
+	fin=$(echo ${choice,,} | awk '{print $2}')
+	case $fin in
 		search)
 			ytw -s
 		;;
