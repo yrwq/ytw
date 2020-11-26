@@ -5,7 +5,7 @@
 
 YTW_PATH=$HOME/.local/share/ytw
 
-# default settings, when you launch the script without arguments
+# default settings
 list=false
 search=false
 dl=false
@@ -83,22 +83,22 @@ while getopts 'lsdvh' flag; do
 	esac
 done
 
+choices="Search\nPlaylist\nAudio\nVideo\n
+"
+
 main(){
-	choice=$(echo -ne "Search\n\
-Playlist\n\
-Audio\n\
-Video" | $menu)
-	case $choice in
-		Search)
+	choice=$(echo -ne ${choices} | $menu)
+	case ${choice,,} in
+		search)
 			ytw -s
 		;;
-		Playlist)
+		playlist)
 			ytw -l
 		;;
-		Audio)
+		audio)
 			ytw -d
 		;;
-		Video)
+		video)
 			ytw -v
 		;;
 	esac
@@ -157,6 +157,7 @@ case $1 in
 	;;
 
 esac
+
 
 # if launched without arguments, show help message
 if [ -z "$1" ]; then
