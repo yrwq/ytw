@@ -3,6 +3,4 @@
 values=$HOME/.local/share/ytw/values
 
 # we only need the title, so get rid of anything else
-title=$(cat $values | jq '.[]' | grep "title" | cut -d ':' -f 2 | sed 's/"//g' | sed 's/,//g' | sed 's/^/ /')
-
-echo $title
+cat $values | jq '.[]' | grep "title" | cut -d ':' -f 2 | sed 's/"//g' | sed 's/,//g' | sed 's/^/ /'
