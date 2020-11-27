@@ -16,21 +16,15 @@
 
 1. Install known dependencies.
 
-	`sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl`
-
-	`pip install youtube-search-python`
-
-	`yay -Sy nerd-fonts-hack`
+	`sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl ttf-nerd-fonts-symbols`
 
 2. Clone this repository.
 
 	`git clone https://github.com/yrwq/ytw && cd ytw`
 
-3. Finally
+3. Finally copy needed scripts to ~/.local/bin
 
-	`make && sudo make install && sudo make man`
-
-
+	`make && sudo make man`
 
 ## Usage
 

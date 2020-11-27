@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # ytw - wrapper for youtube
-# dependencies: mpv, rofi, youtube-dl, python
+# dependencies: mpv, rofi, youtube-dl, python, ttf-nerd-fonts-symbols
 # github.com/yrwq
 
 YTW_PATH=$HOME/.local/share/ytw
@@ -13,7 +13,7 @@ dl=false
 video=false
 audio=false
 
-# launch rofi with theese arguments
+# launch rofi with these arguments
 rofi_args="-dmenu -i -matching fuzzy -p "
 
 # which menu/launcher to use
