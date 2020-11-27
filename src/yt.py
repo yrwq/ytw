@@ -40,6 +40,7 @@ class YoutubeSearch:
             if "videoRenderer" in video.keys():
                 video_data = video.get("videoRenderer", {})
                 res["id"] = video_data.get("videoId", None)
+                res["thumbnails"] = [thumb.get("url", None) for thumb in video_data.get("thumbnail", {}).get("thumbnails", [{}]) ]
                 res["title"] = video_data.get("title", {}).get("runs", [[{}]])[0].get("text", None)
                 res["channel"] = video_data.get("longBylineText", {}).get("runs", [[{}]])[0].get("text", None)
                 res["duration"] = video_data.get("lengthText", {}).get("simpleText", 0)

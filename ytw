@@ -113,9 +113,10 @@ if [ $search = 'true' ]; then
 	sh $YTW_PATH/generate
 
 	# clean up json, only pipe actual titles to menu
-	choice=$(sh $YTW_PATH/utils | $menu)
+	choice=$(sh $YTW_PATH/utils -c | $menu)
 
 	# search on youtube
+	notify-send "Loading..." "${choice}"
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 	link=https://www.youtube.com/watch\?v\="$yid"
 
@@ -143,7 +144,7 @@ if [ $dl = 'true' ]; then
 	sh $YTW_PATH/generate
 
 	# clean up json, only pipe actual titles to menu
-	choice=$(sh $YTW_PATH/utils | $menu)
+	choice=$(sh $YTW_PATH/utils -c | $menu)
 
 	# search on youtube
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)

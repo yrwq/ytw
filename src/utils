@@ -2,5 +2,11 @@
 
 values=$HOME/.local/share/ytw/values
 
-# we only need the title, so get rid of anything else
-cat $values | jq '.[]' | grep "title" | cut -d ':' -f 2 | sed 's/"//g' | sed 's/,//g' | sed 's/^/ /'
+case $1 in
+	# get the whole title
+	-t) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/ /' ;;
+	# cleaner version XD
+	-c) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/ /' | sed 's/Official//g' | sed 's/Music//g' | sed 's/Video//g' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//g' | sed 's/  //g' | sed 's/HD//g' ;;
+	# get thumbnails
+	-i) cat $values | jq '.[.0]'  ;;
+esac
