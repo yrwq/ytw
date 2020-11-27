@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-YTW_PATH=$HOME/.local/share/ytw
-
-# we only need the title, so get rid of anything else
-cat $YTW_PATH/values.json | grep "title" | cut -d ':' -f 2 | sed 's/"//g' | sed 's/,//g' | sed 's/^/ /'

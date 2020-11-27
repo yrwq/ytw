@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import json, sys, getopt
-from youtubesearchpython import SearchVideos
+from yt import YoutubeSearch
 
 argumentList = sys.argv[1:]
 
@@ -32,8 +32,8 @@ try:
             help()
 
         elif currentArgument in ("-t", "--title"):
-            search = SearchVideos(sys.argv[2], offset = 1, mode = "json", max_results = 15)
-            print(search.result())
+            results = YoutubeSearch(sys.argv[2], max_results=1).to_json()
+            print(results)
         else:
             help()
 

@@ -5,8 +5,9 @@ MANDIR = /usr/share/man/man1/
 all:
 	mkdir -p ${DATDIR}
 	cp src/generate ${DATDIR}
-	cp src/getlist ${DATDIR}
+	cp src/utils ${DATDIR}
 	cp src/search.py ${DATDIR}
+	cp src/yt.py ${DATDIR}
 	cp ytw ${BINDIR}
 
 man:
@@ -14,5 +15,4 @@ man:
 
 uninstall:
 	rm -rf ${DATDIR}
-	sudo rm -rf ${MANDIR}
 	rm -rf ${BINDIR}
