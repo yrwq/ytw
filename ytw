@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # ytw - wrapper for youtube
-# dependencies: mpv, rofi, youtube-dl, python, sed, awk
+# dependencies: mpv, rofi, youtube-dl, python
+# github.com/yrwq
 
 YTW_PATH=$HOME/.local/share/ytw
 
@@ -24,8 +25,8 @@ menu="rofi $rofi_args"
 # example:
 # title		url
 
-# vidlist="/home/$USER/.config/playlist"
-vidlist="$YTW_PATH/playlist"
+vidlist="/home/$USER/.config/playlist"
+# vidlist="$YTW_PATH/playlist"
 
 # audio download args
 ytdl_args="--add-metadata --embed-thumbnail \

@@ -26,9 +26,9 @@
 
 	`git clone https://github.com/yrwq/ytw && cd ytw`
 
-3. Copy files
+3. Finally
 
-	`make && sudo make install`
+	`make && sudo make install && sudo make man`
 
 
 
