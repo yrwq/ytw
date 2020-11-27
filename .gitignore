@@ -1,5 +1,6 @@
 values.json
 playlist
+__pycache__
 *.webm
 *.mp3
 *.mp4
