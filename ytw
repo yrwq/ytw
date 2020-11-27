@@ -14,7 +14,7 @@ video=false
 audio=false
 
 # launch rofi with theese arguments
-rofi_args="-dmenu -p YouTube"
+rofi_args="-dmenu -i -matching fuzzy -p YouTube"
 
 # which menu/launcher to use
 # menu="dmenu -i -l 15"

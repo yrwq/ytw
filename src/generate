@@ -3,7 +3,7 @@
 YTW_PATH=$HOME/.local/share/ytw
 
 # prompt the user for a video title
-search="$(rofi -dmenu -p Youtube)"
+search="$(rofi -dmenu -i -p Youtube)"
 
 # put the title between '
 search="'$search'"
