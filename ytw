@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # ytw - wrapper for youtube
-# dependencies: mpv, rofi, youtube-dl, python, ttf-nerd-fonts-symbols, xclip
+# dependencies: mpv, rofi, youtube-dl, python, ttf-nerd-fonts-symbols, xclip, libnotify
 # github.com/yrwq
 
 YTW_PATH=$HOME/.local/share/ytw
@@ -112,11 +112,16 @@ if [ $search = 'true' ]; then
 	# generate the json file
 	sh $YTW_PATH/generate
 
-	# clean up json, only pipe actual titles to menu
-	choice=$(sh $YTW_PATH/utils -c | $menu)
+	for i in 1
+	do
+		list=$(cat $YTW_PATH/values | jq ".videos[${i}].title" | $menu)
+	done
+
+	choice=(echo -ne $list)
 
 	select=" Watch\n Audio\n Video"
-	selmen=$(echo -ne ${select} | $menu)
+	info="$(sh $YTW_PATH/utils -d)"
+	selmen=$(echo -ne ${select} ${info} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
 
 	case $fin in
