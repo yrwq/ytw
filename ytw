@@ -115,7 +115,7 @@ if [ $search = 'true' ]; then
 	# clean up json, only pipe actual titles to menu
 	choice=$(sh $YTW_PATH/utils -c | $menu)
 
-	select=" Watch"
+	select=" Watch\n Audio\n Video"
 	selmen=$(echo -ne ${select} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
 
@@ -131,12 +131,17 @@ if [ $search = 'true' ]; then
 			# play the final link in mpv
   			mpv "$link"
 		;;
-		Download-audio)
+		audio)
 			notify-send " Downloading" ${choice}
-			choice=$(sh $YTW_PATH/utils -c | $menu)
 			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			youtube-dl $ytdl_args $link
+		;;
+		video)
+			notify-send " Downloading" ${choice}
+			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			link=https://www.youtube.com/watch\?v\="$yid"
+			youtube-dl $link -f best
 		;;
 	esac
 
