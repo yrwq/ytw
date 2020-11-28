@@ -2,6 +2,22 @@
 
 values=$HOME/.local/share/ytw/values
 
+duration(){
+	for i in {1..10}
+	do
+		dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
+		echo $dur
+	done
+}
+
+list(){
+	for i in {1..10}
+	do
+		list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
+		echo $list
+	done
+}
+
 case $1 in
 	# get the whole title
 	-t) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/  /' ;;
@@ -9,12 +25,22 @@ case $1 in
 	-c) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/Official//Ig' | sed 's/Music//Ig' | sed 's/Video//Ig' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//Ig' | sed 's/  //g' | sed 's/HD//Ig' | sed 's/^/ /' ;;
 	# get thumbnails
 	-i) cat $values | jq '.videos[].thumbnails[]' | sed 's/"//g' ;;
-	-d) cat $values | jq '.videos[].duration' | sed 's/"//g' ;;
+	-d)
+		duration
+		;;
 	-l)
-		for i in {1..10}
-		do
-			list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
-			echo $list
-		done
+		list
 		;;
 esac
+
+main(){
+	for i in {1..10}
+	do
+		dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
+		list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
+		echo $dur $list
+	done
+
+}
+
+main
