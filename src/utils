@@ -18,13 +18,41 @@ list(){
 	done
 }
 
+thumbnails(){
+	for i in {1..10}
+	do
+		thumbs=$(cat $values | jq .videos[$i].thumbnails | sed 's/"//g' )
+		echo $thumbs
+	done
+}
+
+title_icon(){
+	for i in {1..10}
+	do
+		titles=$(cat $values | jq .videos[$i].title | sed 's/"//g' | sed 's/^/  /')
+		echo $titles
+	done
+}
+
+cleaner_title(){
+	for i in {1..10}
+	do
+		clean_title=$(cat $values | jq .videos[$i].title | sed 's/"//g' | sed 's/Official//Ig' | sed 's/Music//Ig' | sed 's/Video//Ig' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//Ig' | sed 's/  //g' | sed 's/HD//Ig' | sed 's/^/ /' )
+		echo $clean_title
+	done
+}
+
 case $1 in
 	# get the whole title
-	-t) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/  /' ;;
-	# cleaner version XD
-	-c) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/Official//Ig' | sed 's/Music//Ig' | sed 's/Video//Ig' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//Ig' | sed 's/  //g' | sed 's/HD//Ig' | sed 's/^/ /' ;;
-	# get thumbnails
-	-i) cat $values | jq '.videos[].thumbnails[]' | sed 's/"//g' ;;
+	-t)
+		title_icon
+		;;
+	-c)
+		cleaner_title
+		;;
+	-i)
+		thumbnails
+		;;
 	-d)
 		duration
 		;;
@@ -36,9 +64,13 @@ esac
 main(){
 	for i in {1..10}
 	do
+		# duration of the video in min:sec
 		dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
-		list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
-		echo $dur $list
+
+		# cleaner titles, excluding common title names
+		clean_title=$(cat $values | jq .videos[$i].title | sed 's/"//g' | sed 's/Official//Ig' | sed 's/Music//Ig' | sed 's/Video//Ig' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//Ig' | sed 's/  //g' | sed 's/HD//Ig' | sed 's/[][]//g')
+
+		echo $dur'    '$clean_title | sed 's/^/ /'
 	done
 
 }

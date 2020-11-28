@@ -112,7 +112,7 @@ if [ $search = 'true' ]; then
 	# generate the json file
 	sh $YTW_PATH/generate
 
-	choice=$(sh $YTW_PATH/utils -l | $menu)
+	choice=$(sh $YTW_PATH/utils | $menu)
 	select=" Watch\n Audio\n Video"
 	selmen=$(echo -ne ${select} ${info} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
