@@ -4,9 +4,10 @@ values=$HOME/.local/share/ytw/values
 
 case $1 in
 	# get the whole title
-	-t) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/ /' ;;
+	-t) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/  /' ;;
 	# cleaner version XD
-	-c) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/^/ /' | sed 's/Official//g' | sed 's/Music//g' | sed 's/Video//g' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//g' | sed 's/  //g' | sed 's/HD//g' ;;
+	-c) cat $values | jq '.videos[].title' | sed 's/"//g' | sed 's/Official//Ig' | sed 's/Music//Ig' | sed 's/Video//Ig' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//Ig' | sed 's/  //g' | sed 's/HD//Ig' | sed 's/^/ /' ;;
 	# get thumbnails
-	-i) cat $values | jq '.[.0]'  ;;
+	-i) cat $values | jq '.videos[].thumbnails[]' | sed 's/"//g' ;;
+	-d) cat $values | jq '.videos[].duration' | sed 's/"//g' ;;
 esac

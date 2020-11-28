@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # ytw - wrapper for youtube
-# dependencies: mpv, rofi, youtube-dl, python, ttf-nerd-fonts-symbols
+# dependencies: mpv, rofi, youtube-dl, python, ttf-nerd-fonts-symbols, xclip
 # github.com/yrwq
 
 YTW_PATH=$HOME/.local/share/ytw
@@ -115,13 +115,31 @@ if [ $search = 'true' ]; then
 	# clean up json, only pipe actual titles to menu
 	choice=$(sh $YTW_PATH/utils -c | $menu)
 
-	# search on youtube
-	notify-send "Loading..." "${choice}"
-	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-	link=https://www.youtube.com/watch\?v\="$yid"
+	select=" Watch"
+	selmen=$(echo -ne ${select} | $menu)
+	fin=$(echo ${selmen,,} | awk '{print $2}')
 
-	# play the final link in mpv
-  	mpv "$link"
+	case $fin in
+		watch)
+			notify-send " Now playing" "${choice}"
+			# search on youtube
+			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			link=https://www.youtube.com/watch\?v\="$yid"
+
+			# copy link to clipboard
+			echo $link | xclip -sel clip
+			# play the final link in mpv
+  			mpv "$link"
+		;;
+		Download-audio)
+			notify-send " Downloading" ${choice}
+			choice=$(sh $YTW_PATH/utils -c | $menu)
+			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			link=https://www.youtube.com/watch\?v\="$yid"
+			youtube-dl $ytdl_args $link
+		;;
+	esac
+
 fi
 
 # playlist
@@ -166,7 +184,6 @@ case $1 in
 	;;
 
 esac
-
 
 # if launched without arguments, show help message
 if [ -z "$1" ]; then
