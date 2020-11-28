@@ -84,7 +84,7 @@ while getopts 'lsdvh' flag; do
 	esac
 done
 
-choices=" Search\n Playlist\n Audio\n Video\n
+choices=" Search\n Playlist\n陼 Edit\n Audio\n Video\n
 "
 
 main(){
@@ -103,6 +103,9 @@ main(){
 		video)
 			ytw -v
 		;;
+		edit)
+			$TERMINAL -e $EDITOR $vidlist
+		;;
 	esac
 }
 
@@ -113,7 +116,7 @@ if [ $search = 'true' ]; then
 	sh $YTW_PATH/generate
 
 	choice=$(sh $YTW_PATH/utils | $menu)
-	select=" Watch\n Audio\n Video"
+	select=" Watch\n Audio\n Video\n陼 Add"
 	selmen=$(echo -ne ${select} ${info} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
 
@@ -140,6 +143,14 @@ if [ $search = 'true' ]; then
 			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			youtube-dl $link -f best
+		;;
+		add)
+			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			link=https://www.youtube.com/watch\?v\="$yid"
+
+			title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
+			echo -ne $title'	\t'$link'\n' >> $vidlist
+			notify-send "陼Added" "${title}"
 		;;
 	esac
 
