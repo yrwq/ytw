@@ -112,15 +112,8 @@ if [ $search = 'true' ]; then
 	# generate the json file
 	sh $YTW_PATH/generate
 
-	for i in 1
-	do
-		list=$(cat $YTW_PATH/values | jq ".videos[${i}].title" | $menu)
-	done
-
-	choice=(echo -ne $list)
-
+	choice=$(sh $YTW_PATH/utils -l | $menu)
 	select=" Watch\n Audio\n Video"
-	info="$(sh $YTW_PATH/utils -d)"
 	selmen=$(echo -ne ${select} ${info} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
 

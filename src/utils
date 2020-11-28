@@ -11,9 +11,10 @@ case $1 in
 	-i) cat $values | jq '.videos[].thumbnails[]' | sed 's/"//g' ;;
 	-d) cat $values | jq '.videos[].duration' | sed 's/"//g' ;;
 	-l)
-		for i in 1
+		for i in {1..10}
 		do
-			cat $values | jq .videos[$i].title
+			list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
+			echo $list
 		done
 		;;
 esac
