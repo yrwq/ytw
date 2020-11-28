@@ -119,36 +119,36 @@ if [ $search = 'true' ]; then
 	select=" Watch\n Audio\n Video\n陼 Add"
 	selmen=$(echo -ne ${select} ${info} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
+	title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
 
 	case $fin in
 		watch)
-			notify-send " Now playing" "${choice}"
 			# search on youtube
-			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 
 			# copy link to clipboard
 			echo $link | xclip -sel clip
+			notify-send " Now playing" "${title}"
 			# play the final link in mpv
   			mpv "$link"
 		;;
 		audio)
-			notify-send " Downloading" ${choice}
-			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			notify-send " Downloading" ${title}
+			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			youtube-dl $ytdl_args $link
 		;;
 		video)
-			notify-send " Downloading" ${choice}
-			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			notify-send " Downloading" ${title}
+			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			youtube-dl $link -f best
 		;;
 		add)
-			yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 
-			title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
 			echo -ne $title'	\t'$link'\n' >> $vidlist
 			notify-send "陼Added" "${title}"
 		;;
