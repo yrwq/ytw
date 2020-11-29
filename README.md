@@ -11,6 +11,12 @@
 
 > Imagine using a browser for YouTube ...
 
+## Features
+
+- [x] Search youtube videos
+- [x] Download youtube videos
+- [x] Play youtube videos without downloading
+- [x] Using a local playlist
 
 ## Installation
 
@@ -28,14 +34,13 @@
 
 ## Usage
 
-| Command              | What it does                        |
-| :-------------:      | :-------------:                     |
-| ytw                  | launch ytw with a menu              |
-| ytw -s               | search and play with mpv            |
-| ytw -l               | play a video from a local playlist  |
-| ytw -l /path/to/list | play a video from a local playlist  |
-| ytw -d               | search and download audio           |
-| ytw -v               | search and download video           |
-| ytw -h               | show help message                   |
+| Command         | What it does                                            |
+| :-------------: | :-------------:                                         |
+| ytw             | launch ytw with a menu                                  |
+| ytw -s          | search and play with mpv                                |
+| ytw -l          | play a video from a local playlist (~/.config/playlist) |
+| ytw -d          | search on youtube and download audio                    |
+| ytw -v          | search on youtube and download video                    |
+| ytw -h          | show help message                                       |
 
 For more information take a look at the manual. `man ytw`
