@@ -84,8 +84,7 @@ while getopts 'lsdvh' flag; do
 	esac
 done
 
-choices=" Search\n Playlist\n陼 Edit\n Audio\n Video\n
-"
+choices=" Search\n Playlist\n陼 Edit\n Audio\n Video\n"
 
 main(){
 	choice=$(echo -ne ${choices} | $menu)
@@ -111,6 +110,7 @@ main(){
 
 # search with rofi and play with mpv
 # -s
+
 if [ $search = 'true' ]; then
 	# generate the json file
 	sh $YTW_PATH/generate
