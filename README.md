@@ -16,13 +16,13 @@
 
 1. Install known dependencies.
 
-	`sudo pacman -Sy --noconfirm --needed python python-pip bash mpv rofi fzf youtube-dl ttf-nerd-fonts-symbols`
+	`sudo pacman -Sy --noconfirm --needed bash mpv rofi fzf youtube-dl ttf-nerd-fonts-symbols xclip libnotify`
 
 2. Clone this repository.
 
 	`git clone https://github.com/yrwq/ytw && cd ytw`
 
-3. Finally copy needed scripts to ~/.local/bin
+3. Finally copy needed scripts to ~/.local/bin and ~/.local/share/ytw
 
 	`make && sudo make man`
 
@@ -35,7 +35,7 @@
 | ytw -l               | play a video from a local playlist  |
 | ytw -l /path/to/list | play a video from a local playlist  |
 | ytw -d               | search and download audio           |
-| ytw -d               | search and download video           |
+| ytw -v               | search and download video           |
 | ytw -h               | show help message                   |
 
 For more information take a look at the manual. `man ytw`
