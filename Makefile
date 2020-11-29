@@ -4,7 +4,6 @@ MANDIR = /usr/share/man/man1/
 
 all:
 	mkdir -p ${DATDIR}
-	cp src/generate ${DATDIR}
 	cp src/utils ${DATDIR}
 	cp src/search.py ${DATDIR}
 	cp src/yt.py ${DATDIR}

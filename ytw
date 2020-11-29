@@ -47,51 +47,14 @@ Usage:
 EOF
 }
 
-# arguments
-while getopts 'lsdvh' flag; do
-	case "${flag}" in
-		l)
-			list='true'
-			search='false'
-			dl='false'
-			audio='false'
-			video='false'
-			;;
-		s)
-			list='false'
-			search='true'
-			dl='false'
-			audio='false'
-			video='false'
-			;;
-		d)
-			list='false'
-			search='false'
-			dl='true'
-			audio='true'
-			video='false'
-			;;
-		v)
-			list='false'
-			search='false'
-			dl='true'
-			audio='false'
-			video='true'
-			;;
-		h)
-			usage
-			;;
-	esac
-done
-
-choices=" Search\n Playlist\n陼 Edit\n Audio\n Video\n"
-
+# main menu
 main(){
+	choices=" Search\n Playlist\n陼 Edit\n Audio\n Video\n"
 	choice=$(echo -ne ${choices} | $menu)
 	fin=$(echo ${choice,,} | awk '{print $2}')
 	case $fin in
 		search)
-			ytw -s
+			search
 		;;
 		playlist)
 			ytw -l
@@ -108,18 +71,18 @@ main(){
 	esac
 }
 
-# search with rofi and play with mpv
-# -s
+search(){
+	# search on youtube with rofi
+	sh $YTW_PATH/utils -s
 
-if [ $search = 'true' ]; then
-	# generate the json file
-	sh $YTW_PATH/generate
-
+	# choose from results
 	choice=$(sh $YTW_PATH/utils | $menu)
-	select=" Watch\n陼 Add\n螺 Add-and-play\n Download-audio\n Download-video\n"
-	selmen=$(echo -ne ${select} ${info} | $menu)
-	fin=$(echo ${selmen,,} | awk '{print $2}')
+
 	title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
+
+	select="\n Watch\n陼 Add\n螺 Add-and-play\n Download-audio\n Download-video\n"
+	selmen=$(echo -ne ${title} ${select} | $menu)
+	fin=$(echo ${selmen,,} | awk '{print $2}')
 
 	case $fin in
 		watch)
@@ -162,7 +125,9 @@ if [ $search = 'true' ]; then
 			mpv $link
 		;;
 	esac
-
+}
+if [ $search = 'true' ]; then
+	search
 fi
 
 # playlist
@@ -209,6 +174,37 @@ case $1 in
 esac
 
 # if launched without arguments, show help message
-if [ -z "$1" ]; then
-	main
-fi
+[ -z "$1" ]; main
+
+# arguments
+while getopts 'lsdvh' flag; do
+	case "${flag}" in
+		l)
+			list='true'
+			search='false'
+			dl='false'
+			audio='false'
+			video='false'
+			;;
+		s)
+			search
+			;;
+		d)
+			list='false'
+			search='false'
+			dl='true'
+			audio='true'
+			video='false'
+			;;
+		v)
+			list='false'
+			search='false'
+			dl='true'
+			audio='false'
+			video='true'
+			;;
+		h)
+			usage
+			;;
+	esac
+done

@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 
 values=$HOME/.local/share/ytw/values
+YTW_PATH=$HOME/.local/share/ytw
+
+search(){
+	# prompt the user for a video title
+	search="$(rofi -dmenu -i -p )"
+
+	# put the title between '
+	search="'$search'"
+
+	# if values.json exists, then remove
+	[ -e $values ] && rm -rf $YTW_PATH/values
+
+	# generate json values
+	python $YTW_PATH/search.py -t "$search" > $YTW_PATH/values
+}
 
 duration(){
 	for i in {1..10}
@@ -26,31 +41,9 @@ thumbnails(){
 	done
 }
 
-title_icon(){
-	for i in {1..10}
-	do
-		titles=$(cat $values | jq .videos[$i].title | sed 's/"//g' | sed 's/^/  /')
-		echo $titles
-	done
-}
-
-cleaner_title(){
-	for i in {1..10}
-	do
-		clean_title=$(cat $values | jq .videos[$i].title | sed 's/"//g' | sed 's/Official//Ig' | sed 's/Music//Ig' | sed 's/Video//Ig' | sed 's/(//g' | sed 's/)//g' | sed 's/Visualizer//Ig' | sed 's/  //g' | sed 's/HD//Ig' | sed 's/^/ /' )
-		echo $clean_title
-	done
-}
-
 case $1 in
 	# get the whole title
 	-t)
-		title_icon
-		;;
-	-c)
-		cleaner_title
-		;;
-	-i)
 		thumbnails
 		;;
 	-d)
@@ -58,6 +51,9 @@ case $1 in
 		;;
 	-l)
 		list
+		;;
+	-s)
+		search
 		;;
 esac
 
