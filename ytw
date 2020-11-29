@@ -116,7 +116,7 @@ if [ $search = 'true' ]; then
 	sh $YTW_PATH/generate
 
 	choice=$(sh $YTW_PATH/utils | $menu)
-	select=" Watch\n Audio\n Video\n陼 Add"
+	select=" Watch\n陼 Add\n螺 Add-and-play\n Download-audio\n Download-video\n"
 	selmen=$(echo -ne ${select} ${info} | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
 	title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
@@ -133,13 +133,13 @@ if [ $search = 'true' ]; then
 			# play the final link in mpv
   			mpv "$link"
 		;;
-		audio)
+		*audio*)
 			notify-send " Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			youtube-dl $ytdl_args $link
 		;;
-		video)
+		*video*)
 			notify-send " Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
@@ -149,8 +149,17 @@ if [ $search = 'true' ]; then
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 
-			echo -ne $title'	\t'$link'\n' >> $vidlist
+			echo -ne $title'	'$link'\n' >> $vidlist
 			notify-send "陼Added" "${title}"
+		;;
+		add-and-play)
+			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+			link=https://www.youtube.com/watch\?v\="$yid"
+
+			echo -ne $title'	'$link'\n' >> $vidlist
+			notify-send "陼Added & loading" "${title}"
+			echo $link | xclip -sel clip
+			mpv $link
 		;;
 	esac
 
