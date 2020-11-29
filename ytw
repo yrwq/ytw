@@ -6,13 +6,6 @@
 
 YTW_PATH=$HOME/.local/share/ytw
 
-# default settings
-list=false
-search=false
-dl=false
-video=false
-audio=false
-
 # launch rofi with these arguments
 rofi_args="-dmenu -i -matching fuzzy -p "
 
@@ -57,7 +50,7 @@ main(){
 			search
 		;;
 		playlist)
-			ytw -l
+			playlist
 		;;
 		audio)
 			ytw -d
@@ -126,14 +119,8 @@ search(){
 		;;
 	esac
 }
-if [ $search = 'true' ]; then
-	search
-fi
 
-# playlist
-# -p
-if [ $list = 'true' ]; then
-	# stole this from Luke Smith @lukesmithxyz
+playlist(){
 	if [ -z "$2" ]; then
 		cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 	fi
@@ -141,7 +128,7 @@ if [ $list = 'true' ]; then
 	if [ -n "$2" ]; then
 		cat "$2" | grep -P "^$(cat "$2" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 	fi
-fi
+}
 
 # download audio
 # -d
@@ -180,11 +167,7 @@ esac
 while getopts 'lsdvh' flag; do
 	case "${flag}" in
 		l)
-			list='true'
-			search='false'
-			dl='false'
-			audio='false'
-			video='false'
+			playlist
 			;;
 		s)
 			search
