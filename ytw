@@ -53,10 +53,10 @@ main(){
 			playlist
 		;;
 		audio)
-			ytw -d
+			download_audio
 		;;
 		video)
-			ytw -v
+			download_video
 		;;
 		edit)
 			$TERMINAL -e $EDITOR $vidlist
@@ -97,12 +97,14 @@ search(){
 			notify-send " 	Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
+			echo $link | xclip -sel clip
 			youtube-dl $ytdl_args $link
 		;;
 		*video*)
 			notify-send " Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
+			echo $link | xclip -sel clip
 			youtube-dl $link -f best
 		;;
 		add)
@@ -110,6 +112,7 @@ search(){
 			link=https://www.youtube.com/watch\?v\="$yid"
 
 			echo -ne $title'	'$link'\n' >> $vidlist
+			echo $link | xclip -sel clip
 			notify-send "陼Added" "${title}"
 		;;
 		add-and-play)
@@ -117,7 +120,7 @@ search(){
 			link=https://www.youtube.com/watch\?v\="$yid"
 
 			echo -ne $title'	'$link'\n' >> $vidlist
-			notify-send "陼Added & loading" "${title}"
+			notify-send "陼Added & playing" "${title}"
 			echo $link | xclip -sel clip
 			mpv $link
 		;;
@@ -125,13 +128,7 @@ search(){
 }
 
 playlist(){
-	if [ -n "$2" ]; then
-		cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
-	fi
-
-	if [ -z "$2" ]; then
-		cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
-	fi
+	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 }
 
 download_audio(){
@@ -140,6 +137,7 @@ download_audio(){
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 	link=https://www.youtube.com/watch\?v\="$yid"
 
+	notify-send " Downloading" "${title}"
 	youtube-dl $ytdl_args $link
 }
 
@@ -149,6 +147,7 @@ download_video(){
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 	link=https://www.youtube.com/watch\?v\="$yid"
 
+	notify-send " Downloading" "${title}"
 	youtube-dl $link -f best
 }
 
