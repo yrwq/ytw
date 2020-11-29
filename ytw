@@ -64,7 +64,7 @@ main(){
 	esac
 }
 
-search(){
+generate(){
 	# search on youtube with rofi
 	sh $YTW_PATH/utils -s
 
@@ -72,6 +72,10 @@ search(){
 	choice=$(sh $YTW_PATH/utils | $menu)
 
 	title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
+}
+
+search(){
+	generate
 
 	select="\n Watch\n陼 Add\n螺 Add-and-play\n Download-audio\n Download-video\n"
 	selmen=$(echo -ne ${title} ${select} | $menu)
@@ -85,12 +89,12 @@ search(){
 
 			# copy link to clipboard
 			echo $link | xclip -sel clip
-			notify-send " Now playing" "${title}"
+			notify-send "  Now playing" "${title}"
 			# play the final link in mpv
   			mpv "$link"
 		;;
 		*audio*)
-			notify-send " Downloading" ${title}
+			notify-send " 	Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			youtube-dl $ytdl_args $link
@@ -121,47 +125,46 @@ search(){
 }
 
 playlist(){
-	if [ -z "$2" ]; then
+	if [ -n "$2" ]; then
 		cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 	fi
 
-	if [ -n "$2" ]; then
-		cat "$2" | grep -P "^$(cat "$2" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+	if [ -z "$2" ]; then
+		cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 	fi
 }
 
-# download audio
-# -d
-if [ $dl = 'true' ]; then
-	# generate the json file
-	sh $YTW_PATH/generate
+download_audio(){
+	generate
 
-	# clean up json, only pipe actual titles to menu
-	choice=$(sh $YTW_PATH/utils -c | $menu)
-
-	# search on youtube
 	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 	link=https://www.youtube.com/watch\?v\="$yid"
 
-	if [ $audio = 'true' ]; then
-		youtube-dl $ytdl_args $link
-	elif [ $video = 'true' ]; then
-		youtube-dl $link -f best
-	fi
-fi
+	youtube-dl $ytdl_args $link
+}
 
+download_video(){
+	generate
 
-# if argument is an url, download it as an audio
+	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
+	link=https://www.youtube.com/watch\?v\="$yid"
+
+	youtube-dl $link -f best
+}
+
+# handle urls
 case $1 in
 
+	# download as audio
 	*youtube.com* | *youtu.be* | *soundcloud.com*)
 		youtube-dl $ytdl_args $1
 	;;
 
 esac
 
-# if launched without arguments, show help message
-[ -z "$1" ]; main
+if [ -z "$1" ]; then
+	main
+fi
 
 # arguments
 while getopts 'lsdvh' flag; do
@@ -173,18 +176,10 @@ while getopts 'lsdvh' flag; do
 			search
 			;;
 		d)
-			list='false'
-			search='false'
-			dl='true'
-			audio='true'
-			video='false'
+			download_audio
 			;;
 		v)
-			list='false'
-			search='false'
-			dl='true'
-			audio='false'
-			video='true'
+			download_video
 			;;
 		h)
 			usage
