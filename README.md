@@ -5,7 +5,7 @@
 
 ### A simple YouTube wrapper for lazy people, written in bash and python.
 
-<img src=".assets/preview.gif" align="center">
+<img src=".assets/prev.gif" align="center">
 
 </div>
 
