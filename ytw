@@ -6,6 +6,9 @@
 
 YTW_PATH=$HOME/.local/share/ytw
 
+# path of the downloaded cover image
+cover_path=$YTW_PATH/ytw_cover.jpg
+
 # launch rofi with these arguments
 rofi_args="-dmenu -i -matching fuzzy -p "
 
@@ -76,13 +79,16 @@ generate(){
 	[[ -z "$choice" ]] && { exit 1; }
 
 	id=$(echo -e ${choice} | awk '{print $1}' )
-	title=$(echo -e ${choice} | awk '{$1=$2=""; print $0}')
+	title=$(echo -e ${choice} | awk '{$1=""; print $0}')
 
 	infos=$(cat $YTW_PATH/values)
 
-	thumbnail=$(echo $infos | jq .videos[$id].thumbnails)
+	thumbnail=$(echo $infos | jq .videos[$id].thumbnails | sed 's/[][]//g' | sed 's/"//g' )
 	dur=$(echo $infos | jq .videos[$id].duration)
+	clear
 	echo $dur
+	echo $thumbnail
+	curl -Ss $thumbnail -o $YTW_PATH/ytw_cover.jpg
 
 }
 
@@ -101,19 +107,19 @@ search(){
 
 			# copy link to clipboard
 			echo $link | xclip -sel clip
-			notify-send "  Now playing" "${title}"
+			notify-send -i $cover_path "  Now playing" "${title}"
 			# play the final link in mpv
   			mpv "$link"
 		;;
 		*audio*)
-			notify-send " 	Downloading" ${title}
+			notify-send -i $cover_path " 	Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			echo $link | xclip -sel clip
 			youtube-dl $ytdl_args $link
 		;;
 		*video*)
-			notify-send " Downloading" ${title}
+			notify-send -i $cover_path " Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			echo $link | xclip -sel clip
@@ -125,14 +131,14 @@ search(){
 
 			echo -ne $title'	'$link'\n' >> $vidlist
 			echo $link | xclip -sel clip
-			notify-send "陼Added" "${title}"
+			notify-send -i $cover_path "陼Added" "${title}"
 		;;
 		add-and-play)
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 
 			echo -ne $title'	'$link'\n' >> $vidlist
-			notify-send "陼Added & playing" "${title}"
+			notify-send -i $cover_path "陼Added & playing" "${title}"
 			echo $link | xclip -sel clip
 			mpv $link
 		;;
