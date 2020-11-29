@@ -7,14 +7,16 @@ search(){
 	# prompt the user for a video title
 	search="$(rofi -dmenu -i -p )"
 
+	[[ -z "$search" ]] && { exit 1; }
+
 	# put the title between '
 	search="'$search'"
 
-	# if values.json exists, then remove
 	[ -e $values ] && rm -rf $YTW_PATH/values
+	[ -e $values ] && rm -rf $YTW_PATH/choices
 
-	# generate json values
 	python $YTW_PATH/search.py -t "$search" > $YTW_PATH/values
+
 }
 
 duration(){
@@ -41,6 +43,21 @@ thumbnails(){
 	done
 }
 
+main(){
+	[ -e $values ] && rm -rf $YTW_PATH/choices
+	for i in {0..9}
+	do
+		# duration of the video in min:sec
+		dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
+
+		# title
+		list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
+
+		echo -e $i'	'$list >> $YTW_PATH/choices
+
+	done
+}
+
 case $1 in
 	# get the whole title
 	-t)
@@ -55,14 +72,7 @@ case $1 in
 	-s)
 		search
 		;;
+	-m)
+		main
+		;;
 esac
-
-for i in {0..9}
-do
-	# duration of the video in min:sec
-	dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
-
-	list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
-
-	echo -e '  '$dur'    '$list | sed 's/^/ /'
-done

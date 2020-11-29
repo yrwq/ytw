@@ -68,17 +68,29 @@ generate(){
 	# search on youtube with rofi
 	sh $YTW_PATH/utils -s
 
-	# choose from results
-	choice=$(sh $YTW_PATH/utils | $menu)
+	# generate choices
+	sh $YTW_PATH/utils -m
 
-	title=$(echo ${choice} | awk '{$1=$2=""; print $0}')
+	choice=$(cat $YTW_PATH/choices | $menu)
+
+	[[ -z "$choice" ]] && { exit 1; }
+
+	id=$(echo -e ${choice} | awk '{print $1}' )
+	title=$(echo -e ${choice} | awk '{$1=$2=""; print $0}')
+
+	infos=$(cat $YTW_PATH/values)
+
+	thumbnail=$(echo $infos | jq .videos[$id].thumbnails)
+	dur=$(echo $infos | jq .videos[$id].duration)
+	echo $dur
+
 }
 
 search(){
 	generate
 
 	select="\n Watch\n陼 Add\n螺 Add-and-play\n Download-audio\n Download-video\n"
-	selmen=$(echo -ne ${title} ${select} | $menu)
+	selmen=$(echo -ne "Title:${title} \n Duration:${dur}  ${select}" | $menu)
 	fin=$(echo ${selmen,,} | awk '{print $2}')
 
 	case $fin in
@@ -148,6 +160,7 @@ download_video(){
 	link=https://www.youtube.com/watch\?v\="$yid"
 
 	notify-send " Downloading" "${title}"
+
 	youtube-dl $link -f best
 }
 
@@ -166,7 +179,7 @@ if [ -z "$1" ]; then
 fi
 
 # arguments
-while getopts 'lsdvh' flag; do
+while getopts 'lsdvhf' flag; do
 	case "${flag}" in
 		l)
 			playlist
@@ -179,6 +192,9 @@ while getopts 'lsdvh' flag; do
 			;;
 		v)
 			download_video
+			;;
+		f)
+			generate
 			;;
 		h)
 			usage
