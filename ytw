@@ -9,6 +9,11 @@ YTW_PATH=$HOME/.local/share/ytw
 # path of the downloaded cover image
 cover_path=$YTW_PATH/ytw_cover.jpg
 
+# path to download music files
+# music_dir=$HOME/Music
+music_dir=$HOME/etc/music
+vid_dir=$HOME/etc/vid
+
 # launch rofi with these arguments
 rofi_args="-dmenu -i -matching fuzzy -p "
 
@@ -27,7 +32,7 @@ vidlist="/home/$USER/.config/playlist"
 # audio download args
 ytdl_args="--add-metadata --embed-thumbnail \
 	--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
-	--ignore-errors --restrict-filenames --verbose"
+	--ignore-errors --restrict-filenames --verbose -o $music_dir/%(title)s.%(ext)s"
 
 # help message
 usage(){
@@ -134,7 +139,7 @@ search(){
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			echo $link | xclip -sel clip
-			youtube-dl $link -f best
+			youtube-dl -f best -o "$vid_dir/%(title)s.%(ext)s" $link
 		;;
 		add)
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
@@ -178,7 +183,7 @@ download_video(){
 
 	notify-send -i $cover_path " Downloading" "${title}"
 
-	youtube-dl $link -f best
+	youtube-dl -f best -o "$vid_dir/%(title)s.%(ext)s" $link
 }
 
 # handle urls
