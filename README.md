@@ -22,11 +22,13 @@
 
 1. Install known dependencies.
 
-	`sudo pacman -Sy --noconfirm --needed bash mpv rofi fzf youtube-dl ttf-nerd-fonts-symbols xclip libnotify`
+	`sudo pacman -Sy --noconfirm --needed bash python python-pip mpv rofi fzf youtube-dl ttf-nerd-fonts-symbols xclip libnotify jq`
+
+	`pip install requests`
 
 2. Clone this repository.
 
-	`git clone https://github.com/yrwq/ytw && cd ytw`
+	`git clone https://github.com/yrwq/ytw --depth=1 && cd ytw`
 
 3. Finally copy needed scripts to ~/.local/bin and ~/.local/share/ytw
 
