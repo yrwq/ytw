@@ -92,10 +92,11 @@ generate(){
 	infos=$(cat $YTW_PATH/values)
 
 	thumbnail=$(echo $infos | jq .videos[$id].thumbnails | sed 's/[][]//g' | sed 's/"//g' )
-	dur=$(echo $infos | jq .videos[$id].duration)
-	channel=$(echo $infos | jq .videos[$id].channel)
-	title=$(echo $infos | jq .videos[$id].title)
-	views=$(echo $infos | jq .videos[$id].views)
+	dur=$(echo $infos | jq .videos[$id].duration | sed 's/"//g')
+	channel=$(echo $infos | jq .videos[$id].channel | sed 's/"//g')
+	title=$(echo $infos | jq .videos[$id].title | sed 's/"//g')
+	views=$(echo $infos | jq .videos[$id].views | sed 's/"//g')
+	url=$(echo $infos | jq .videos[$id].url_suffix | sed 's/"//g')
 
 	clear
 	curl -Ss $thumbnail -o $YTW_PATH/ytw_cover.jpg
@@ -109,17 +110,16 @@ generate(){
 search(){
 	generate
 
-	select="\n Watch\n陼 Add\n螺 Add-and-play\n Download-audio\n Download-video\n"
+	select="\n Play\n陼 Add to playlist\n螺 Add and play\n Download audio\n Download video\n"
 	selmen=$(echo -ne "Title:${title} \nChannel:${channel}\nViews:${views}\nDuration:${dur}\n${select}" | $menu)
-	fin=$(echo ${selmen,,} | awk '{print $2}')
+	fin=$(echo ${selmen} | awk '{print $2}')
 
 	[[ -z "$select" ]] && { exit 1; }
 
 	case $fin in
-		watch)
+		"Play")
 			# search on youtube
-			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-			link=https://www.youtube.com/watch\?v\="$yid"
+			link=https://www.youtube.com"$url"
 
 			# copy link to clipboard
 			echo $link | xclip -sel clip
@@ -127,21 +127,21 @@ search(){
 			# play the final link in mpv
   			mpv "$link"
 		;;
-		*audio*)
+		"Download audio")
 			notify-send -i $cover_path " 	Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			echo $link | xclip -sel clip
 			youtube-dl $ytdl_args $link
 		;;
-		*video*)
+		"Download video")
 			notify-send -i $cover_path " Downloading" ${title}
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 			echo $link | xclip -sel clip
 			youtube-dl -f best -o "$vid_dir/%(title)s.%(ext)s" $link
 		;;
-		add)
+		"Add to playlist")
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 
@@ -149,7 +149,7 @@ search(){
 			echo $link | xclip -sel clip
 			notify-send -i $cover_path "陼Added" "${title}"
 		;;
-		add-and-play)
+		"Add and play")
 			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
 			link=https://www.youtube.com/watch\?v\="$yid"
 
