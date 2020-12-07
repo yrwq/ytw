@@ -50,23 +50,17 @@ EOF
 
 # main menu
 main(){
-	choices=" Search\n Playlist\n陼 Edit\n Audio\n Video\n"
+	choices=" Search\n Playlist\n陼 Edit playlist"
 	choice=$(echo -ne ${choices} | $menu)
-	fin=$(echo ${choice,,} | awk '{print $2}')
+	fin=$(echo ${choice} | awk '{print $2}')
 	case $fin in
-		search)
+		"Search")
 			search
 		;;
-		playlist)
+		"Playlist")
 			playlist
 		;;
-		audio)
-			download_audio
-		;;
-		video)
-			download_video
-		;;
-		edit)
+		"Edit playlist")
 			$TERMINAL -e $EDITOR $vidlist
 		;;
 	esac
@@ -76,10 +70,10 @@ generate(){
 	# search on youtube with rofi
 	sh $YTW_PATH/utils -s
 
-	# generate choices
+	# generate values
 	sh $YTW_PATH/utils -m
 
-	# prompt the user to choose from choices
+	# prompt the user to choose from generated values
 	choice=$(cat $YTW_PATH/choices | $menu)
 
 	# exit if choice doesn't exist
@@ -87,10 +81,7 @@ generate(){
 
 	# get information about video
 	id=$(echo -e ${choice} | awk '{print $1}' )
-	# title=$(echo -e ${choice} | awk '{$1=""; print $0}')
-
 	infos=$(cat $YTW_PATH/values)
-
 	thumbnail=$(echo $infos | jq .videos[$id].thumbnails | sed 's/[][]//g' | sed 's/"//g' )
 	dur=$(echo $infos | jq .videos[$id].duration | sed 's/"//g')
 	channel=$(echo $infos | jq .videos[$id].channel | sed 's/"//g')
@@ -98,12 +89,8 @@ generate(){
 	views=$(echo $infos | jq .videos[$id].views | sed 's/"//g')
 	url=$(echo $infos | jq .videos[$id].url_suffix | sed 's/"//g')
 
-	clear
+	# download thumbnail for notifications
 	curl -Ss $thumbnail -o $YTW_PATH/ytw_cover.jpg
-	echo $title
-	echo $dur
-	echo $channel
-	echo $views
 
 }
 
@@ -111,6 +98,7 @@ search(){
 	generate
 
 	select="\n Play\n陼 Add to playlist\n螺 Add and play\n Download audio\n Download video\n"
+
 	selmen=$(echo -ne "Title:${title} \nChannel:${channel}\nViews:${views}\nDuration:${dur}\n${select}" | $menu)
 	fin=$(echo ${selmen} | awk '{print $2}')
 
@@ -129,30 +117,25 @@ search(){
 		;;
 		"Download audio")
 			notify-send -i $cover_path " 	Downloading" ${title}
-			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-			link=https://www.youtube.com/watch\?v\="$yid"
+			link=https://www.youtube.com"$url"
 			echo $link | xclip -sel clip
 			youtube-dl $ytdl_args $link
 		;;
 		"Download video")
 			notify-send -i $cover_path " Downloading" ${title}
-			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-			link=https://www.youtube.com/watch\?v\="$yid"
+			link=https://www.youtube.com"$url"
 			echo $link | xclip -sel clip
 			youtube-dl -f best -o "$vid_dir/%(title)s.%(ext)s" $link
 		;;
 		"Add to playlist")
-			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-			link=https://www.youtube.com/watch\?v\="$yid"
+			link=https://www.youtube.com"$url"
 
 			echo -ne $title'	'$link'\n' >> $vidlist
 			echo $link | xclip -sel clip
 			notify-send -i $cover_path "陼Added" "${title}"
 		;;
 		"Add and play")
-			yid=$(youtube-dl ytsearch:"$title" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-			link=https://www.youtube.com/watch\?v\="$yid"
-
+			link=https://www.youtube.com"$url"
 			echo -ne $title'	'$link'\n' >> $vidlist
 			notify-send -i $cover_path "陼Added & playing" "${title}"
 			echo $link | xclip -sel clip
@@ -163,27 +146,6 @@ search(){
 
 playlist(){
 	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
-}
-
-download_audio(){
-	generate
-
-	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-	link=https://www.youtube.com/watch\?v\="$yid"
-
-	notify-send -i $cover_path " Downloading" "${title}"
-	youtube-dl $ytdl_args $link
-}
-
-download_video(){
-	generate
-
-	yid=$(youtube-dl ytsearch:"$choice" -s | grep "\[youtube\]" | cut -d ']' -f 2 | awk -F ':' '{print $1}' | cut -c 2-)
-	link=https://www.youtube.com/watch\?v\="$yid"
-
-	notify-send -i $cover_path " Downloading" "${title}"
-
-	youtube-dl -f best -o "$vid_dir/%(title)s.%(ext)s" $link
 }
 
 # handle urls
@@ -208,12 +170,6 @@ while getopts 'lsdvhf' flag; do
 			;;
 		s)
 			search
-			;;
-		d)
-			download_audio
-			;;
-		v)
-			download_video
 			;;
 		f)
 			generate
