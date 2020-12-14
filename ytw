@@ -102,9 +102,9 @@ search(){
 	generate
 
 
-	select="\n Play\n陼 Add to playlist\n螺 Add and play\n Download audio\n Download video\n"
+	select=" Play\n陼 Add to playlist\n螺 Add and play\n Download audio\n Download video\n"
 
-	selmen=$(echo -ne "Title:${title} \nChannel:${channel}\nViews:${views}\nDuration:${dur}\n${select}" | $menu)
+	selmen=$(echo -ne "${select} \nTitle:${title}\nChannel:${channel}\nViews:${views}\nDuration:${dur}" | $menu)
 	fin=$(echo ${selmen} | awk '{print $2}')
 
 	[[ -z "$select" ]] && { exit 1; }
