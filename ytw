@@ -103,7 +103,7 @@ search(){
     # Search and generate values
     generate
 
-    select=" Play\n螺 Add\n蘿 Add&Play\n Audio\n Video\n"
+    select=" Play\n螺 Add\n Audio\n Video\n"
     selmen=$(echo -ne "${select} \nTitle:${title}\nChannel:${channel}\n${views}\nDuration:${dur}" | $menu)
     
     # Remove icons from the selected option
@@ -111,46 +111,33 @@ search(){
     echo $fin
     # If not selected anything, exit
     [[ -z "$select" ]] && { exit 1; }
-    
+
+    link=https://www.youtube.com"$url"
+    echo $link | xclip -sel clip
+
     case $fin in
 
 	# Play the video with mpv
 	play)
-	    link=https://www.youtube.com"$url"
-	    echo $link | xclip -sel clip
 	    notify-send -i $cover_path "   Now playing" "${title}"
   	    mpv "$link"
 	    ;;
 
 	# Download and play audio
 	*audio*)
-	    notify-send -i $cover_path "   Downloading" ${title}
-	    link=https://www.youtube.com"$url"
-	    echo $link | xclip -sel clip
-	    mpv "$link"
+	    notify-send -i $cover_path "   Downloading" "${title}"
+	    mpv "$link" &
 	    youtube-dl $ytdl_args $link
 	    ;;
 
-
 	*video*)
-	    notify-send -i $cover_path "   Downloading" ${title}
-	    link=https://www.youtube.com"$url"
-	    echo $link | xclip -sel clip
+	    notify-send -i $cover_path "   Downloading" "${title}"
 	    youtube-dl $ytdl_vid_args $link
 	    ;;
 	add)
-	    link=https://www.youtube.com"$url"
-	    echo $link | xclip -sel clip
-	    
+	    mpv "$link" &
 	    echo -ne $title'	'$link'\n' >> $vidlist
 	    notify-send -i $cover_path "螺  Added" "${title}"
-	    ;;
-	"add&play")
-	    link=https://www.youtube.com"$url"
-	    echo $link | xclip -sel clip
-	    echo -ne $title'	'$link'\n' >> $vidlist
-	    notify-send -i $cover_path "螺  Added & playing" "${title}"
-	    mpv $link
 	    ;;
     esac
 }
