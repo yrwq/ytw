@@ -99,55 +99,63 @@ generate(){
 }
 
 search(){
-	generate
+
+    # Search and generate values
+    generate
+
+    select=" Play\n螺 Add\n蘿 Add&Play\n Audio\n Video\n"
+    selmen=$(echo -ne "${select} \nTitle:${title}\nChannel:${channel}\n${views}\nDuration:${dur}" | $menu)
+    
+    # Remove icons from the selected option
+    fin=$(echo ${selmen,,} | awk '{print $2}')
+    echo $fin
+    # If not selected anything, exit
+    [[ -z "$select" ]] && { exit 1; }
+    
+    case $fin in
+
+	# Play the video with mpv
+	play)
+	    link=https://www.youtube.com"$url"
+	    echo $link | xclip -sel clip
+	    notify-send -i $cover_path "   Now playing" "${title}"
+  	    mpv "$link"
+	    ;;
+
+	# Download and play audio
+	*audio*)
+	    notify-send -i $cover_path "   Downloading" ${title}
+	    link=https://www.youtube.com"$url"
+	    echo $link | xclip -sel clip
+	    mpv "$link"
+	    youtube-dl $ytdl_args $link
+	    ;;
 
 
-	select=" Play\n陼 Add to playlist\n螺 Add and play\n Download audio\n Download video\n"
-
-	selmen=$(echo -ne "${select} \nTitle:${title}\nChannel:${channel}\nViews:${views}\nDuration:${dur}" | $menu)
-	fin=$(echo ${selmen} | awk '{print $2}')
-
-	[[ -z "$select" ]] && { exit 1; }
-
-	case $fin in
-		"Play")
-			# search on youtube
-			link=https://www.youtube.com"$url"
-
-			# copy link to clipboard
-			echo $link | xclip -sel clip
-			notify-send -i $cover_path "  Now playing" "${title}"
-			# play the final link in mpv
-  			mpv "$link"
-		;;
-		"Download audio")
-			notify-send -i $cover_path " 	Downloading" ${title}
-			link=https://www.youtube.com"$url"
-			echo $link | xclip -sel clip
-			youtube-dl $ytdl_args $link
-		;;
-		"Download video")
-			notify-send -i $cover_path " Downloading" ${title}
-			link=https://www.youtube.com"$url"
-			echo $link | xclip -sel clip
-			youtube-dl $ytdl_vid_args $link
-		;;
-		"Add to playlist")
-			link=https://www.youtube.com"$url"
-
-			echo -ne $title'	'$link'\n' >> $vidlist
-			notify-send -i $cover_path "陼Added" "${title}"
-		;;
-		"Add and play")
-			link=https://www.youtube.com"$url"
-			echo -ne $title'	'$link'\n' >> $vidlist
-			notify-send -i $cover_path "陼Added & playing" "${title}"
-			echo $link | xclip -sel clip
-			mpv $link
-		;;
-	esac
+	*video*)
+	    notify-send -i $cover_path "   Downloading" ${title}
+	    link=https://www.youtube.com"$url"
+	    echo $link | xclip -sel clip
+	    youtube-dl $ytdl_vid_args $link
+	    ;;
+	add)
+	    link=https://www.youtube.com"$url"
+	    echo $link | xclip -sel clip
+	    
+	    echo -ne $title'	'$link'\n' >> $vidlist
+	    notify-send -i $cover_path "螺  Added" "${title}"
+	    ;;
+	"add&play")
+	    link=https://www.youtube.com"$url"
+	    echo $link | xclip -sel clip
+	    echo -ne $title'	'$link'\n' >> $vidlist
+	    notify-send -i $cover_path "螺  Added & playing" "${title}"
+	    mpv $link
+	    ;;
+    esac
 }
 
+# I don't understand what's going on here so don't ask me.
 playlist(){
 	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 }
