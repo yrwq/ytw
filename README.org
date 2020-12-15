@@ -27,19 +27,27 @@ pip install requests
 #+end_src
 
 - Clone this repository.
+
 #+begin_src bash
 
-	git clone https://github.com/yrwq/ytw --depth=1 && cd ytw
+git clone https://github.com/yrwq/ytw --depth=1 && cd ytw
 
 #+end_src
+
 - Finally copy needed scripts to ~/.local/bin and ~/.local/share/ytw
+
 #+begin_src bash
-	make
+
+make
+
 #+end_src
 
-	Optionally install ytw man page.
+- Optionally install ytw man page.
+
 #+begin_src bash
-	sudo make man
+
+sudo make man
+
 #+end_src
 
 *  Usage
