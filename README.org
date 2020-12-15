@@ -14,31 +14,34 @@
 
 * Installation
 
-1. Install known dependencies.
+- Install known dependencies.
+#+begin_src bash
+	sudo pacman -Sy --noconfirm --needed bash python python-pip mpv rofi youtube-dl ttf-nerd-fonts-symbols xclip libnotify jq curl
 
-	`sudo pacman -Sy --noconfirm --needed bash python python-pip mpv rofi youtube-dl ttf-nerd-fonts-symbols xclip libnotify jq curl`
+	pip install requests
+#+end_src
 
-	`pip install requests`
+- Clone this repository.
+#+begin_src bash
 
-2. Clone this repository.
+	git clone https://github.com/yrwq/ytw --depth=1 && cd ytw
 
-	`git clone https://github.com/yrwq/ytw --depth=1 && cd ytw`
-
-3. Finally copy needed scripts to ~/.local/bin and ~/.local/share/ytw
-
-	`make`
+#+end_src
+- Finally copy needed scripts to ~/.local/bin and ~/.local/share/ytw
+#+begin_src bash
+	make
+#+end_src
 
 	Optionally install ytw man page.
-
-	`sudo make man`
+#+begin_src bash
+	sudo make man
+#+end_src
 
 *  Usage
 
-| Command         | What it does                                            |
-| :-------------: | :-------------:                                         |
-| ytw             | launch main menu                                        |
-| ytw -s          | search and play with mpv                                |
-| ytw -l          | play a video from a local playlist (~/.config/playlist) |
-| ytw -h          | show help message                                       |
-
-For more information take a look at the manual.
+| Command | What it does                                            |
+|---------+---------------------------------------------------------|
+| ytw     | launch main menu                                        |
+| ytw -s  | search and play with mpv                                |
+| ytw -l  | play a video from a local playlist (~/.config/playlist) |
+| ytw -h  | show help message                                       |
