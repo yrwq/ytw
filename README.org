@@ -5,12 +5,12 @@
 
 * Features
 
-** [x] Search youtube videos
-** [x] Download youtube videos
-** [x] Download from soundcloud
-** [x] Download youtube videos as audio
-** [x] Play youtube videos without downloading
-** [x] Play youtube videos using a local playlist
+- [x] Search youtube videos
+- [x] Download youtube videos
+- [x] Download from soundcloud
+- [x] Download youtube videos as audio
+- [x] Play youtube videos without downloading
+- [x] Play youtube videos using a local playlist
 
 * Installation
 
