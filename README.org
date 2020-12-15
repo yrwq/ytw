@@ -1,26 +1,18 @@
 # YouTube Wrapper
 
+#+html: <p align="center"> <img src=".assets/prev.gif"> </p>
 
-<div align="center">
 
-### A simple youtube-dl wrapper for lazy people, written in bash and python.
+* Features
 
-<img src=".assets/prev.gif" align="center">
+** [x] Search youtube videos
+** [x] Download youtube videos
+** [x] Download from soundcloud
+** [x] Download youtube videos as audio
+** [x] Play youtube videos without downloading
+** [x] Play youtube videos using a local playlist
 
-</div>
-
-> Imagine using a browser for YouTube ...
-
-## Features
-
-- [x] Search youtube videos
-- [x] Download youtube videos
-- [x] Download from soundcloud
-- [x] Download youtube videos as audio
-- [x] Play youtube videos without downloading
-- [x] Play youtube videos using a local playlist
-
-## Installation
+* Installation
 
 1. Install known dependencies.
 
@@ -40,7 +32,7 @@
 
 	`sudo make man`
 
-## Usage
+*  Usage
 
 | Command         | What it does                                            |
 | :-------------: | :-------------:                                         |

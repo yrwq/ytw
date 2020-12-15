@@ -53,7 +53,7 @@ main(){
 
     # If playlist file doesn't exists, create it
     [[ -z "$vidlist" ]] && { touch $vidlist; }
-
+    
     choices=" Search\n Playlist\n陼 Edit playlist"
     choice=$(echo -ne ${choices} | $menu)
     fin=$(echo ${choice} | awk '{print $2}')
@@ -71,31 +71,31 @@ main(){
 }
 
 generate(){
-	# search on youtube with rofi
-	sh $YTW_PATH/utils -s
-
-	# generate values
-	sh $YTW_PATH/utils -m
-
-	# prompt the user to choose from generated values
-	choice=$(cat $YTW_PATH/choices | $menu)
-
-	# exit if choice doesn't exist
-	[[ -z "$choice" ]] && { exit 1; }
-
-	# get information about video
-	id=$(echo -e ${choice} | awk '{print $1}' )
-	infos=$(cat $YTW_PATH/values)
-	thumbnail=$(echo $infos | jq .videos[$id].thumbnails | sed 's/[][]//g' | sed 's/"//g' )
-	dur=$(echo $infos | jq .videos[$id].duration | sed 's/"//g')
-	channel=$(echo $infos | jq .videos[$id].channel | sed 's/"//g')
-	title=$(echo $infos | jq .videos[$id].title | sed 's/"//g')
-	views=$(echo $infos | jq .videos[$id].views | sed 's/"//g')
-	url=$(echo $infos | jq .videos[$id].url_suffix | sed 's/"//g')
-
-	# download thumbnail for notifications
-	curl -Ss $thumbnail -o $YTW_PATH/ytw_cover.jpg
-
+    # search on youtube with rofi
+    sh $YTW_PATH/utils -s
+    
+    # generate values
+    sh $YTW_PATH/utils -m
+    
+    # prompt the user to choose from generated values
+    choice=$(cat $YTW_PATH/choices | $menu)
+    
+    # exit if choice doesn't exist
+    [[ -z "$choice" ]] && { exit 1; }
+    
+    # get information about video
+    id=$(echo -e ${choice} | awk '{print $1}' )
+    infos=$(cat $YTW_PATH/values)
+    thumbnail=$(echo $infos | jq .videos[$id].thumbnails | sed 's/[][]//g' | sed 's/"//g' )
+    dur=$(echo $infos | jq .videos[$id].duration | sed 's/"//g')
+    channel=$(echo $infos | jq .videos[$id].channel | sed 's/"//g')
+    title=$(echo $infos | jq .videos[$id].title | sed 's/"//g')
+    views=$(echo $infos | jq .videos[$id].views | sed 's/"//g')
+    url=$(echo $infos | jq .videos[$id].url_suffix | sed 's/"//g')
+    
+    # download thumbnail for notifications
+    curl -Ss $thumbnail -o $YTW_PATH/ytw_cover.jpg
+    
 }
 
 search(){
@@ -144,21 +144,21 @@ search(){
 
 # I don't understand what's going on here so don't ask me.
 playlist(){
-	cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
+    cat "$vidlist" | grep -P "^$(cat "$vidlist" | grep "https:" | sed 's/\t.*//g' | $menu | awk '{print $1}')\s" | sed 's/.*\t//' | xargs -r mpv
 }
 
 # handle urls
 case $1 in
-
-	# download as audio
-	*youtube.com* | *youtu.be* | *soundcloud.com*)
-		youtube-dl $ytdl_args $1
+    
+    # download as audio
+    *youtube.com* | *youtu.be* | *soundcloud.com*)
+	youtube-dl $ytdl_args $1
 	;;
-
+    
 esac
 
 if [ -z "$1" ]; then
-	main
+    main
 fi
 
 # arguments

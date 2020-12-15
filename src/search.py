@@ -20,23 +20,24 @@ def help():
     print ("Example:")
     print ('        -t "interesting title"')
     print ("")
-
+    
 try:
     # Parsing argument
     arguments, values = getopt.getopt(argumentList, options, long_options)
 
     # checking each argument
     for currentArgument, currentValue in arguments:
-
+        
         if currentArgument in ("-h", "--help"):
             help()
-
+            
         elif currentArgument in ("-t", "--title"):
-            results = YoutubeSearch(sys.argv[2], max_results=30).to_json()
+            results = YoutubeSearch(sys.argv[2], max_results=15).to_json()
             print(results)
         else:
             help()
-
+            
 except getopt.error as err:
     # output error, and return with an error code
     print (str(err))
+    
