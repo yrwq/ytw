@@ -1,6 +1,6 @@
 .\" Manpage for ytw.
 
-.TH ytw 1 "25 Nov 2020" "1.0" "ytw man page"
+.TH ytw 1 "25 Nov 2020" "1.0" "ytw"
 
 .SH NAME
 ytw \- YouTube Wrapper
@@ -16,18 +16,16 @@ YouTube wrapper written in bash and python, that means you don't have to use you
 
 \f[B]-l\f[R]
 
-Playlist mode, looks for a playlist file at ~/.local/share/ytw/playlist and lists them in rofi. Pick one to play in mpv.
+Playlist mode, looks for a playlist file at ~/.local/share/ytw/playlist and lists the titles in rofi. Pick one to play in mpv.
 
 You can use a custom playlist path too, example: ytw -l /path/to/playlist
-
 
 \f[B]-s\f[R]
 
 Search mode, prompts the user for a title, list top 15 youtube results. Pick one to play in mpv.
 
-
 .SH SEE ALSO
-dmenu(1), rofi(1), youtube-dl(1), mpv(1)
+rofi(1), youtube-dl(1), mpv(1)
 
 .SH BUGS
 No known bugs.
