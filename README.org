@@ -15,11 +15,16 @@
 * Installation
 
 - Install known dependencies.
-      #+begin_src bash
-	sudo pacman -Sy --noconfirm --needed bash python python-pip mpv rofi youtube-dl ttf-nerd-fonts-symbols xclip libnotify jq curl
+#+begin_src bash
 
-	pip install requests
-      #+end_src
+sudo pacman -Sy --noconfirm --needed bash python python-pip mpv rofi youtube-dl ttf-nerd-fonts-symbols xclip libnotify jq curl
+
+#+end_src
+#+begin_src bash
+
+pip install requests
+
+#+end_src
 
 - Clone this repository.
 #+begin_src bash
