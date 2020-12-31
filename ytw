@@ -10,12 +10,12 @@ YTW_PATH=$HOME/.local/share/ytw
 cover_path=$YTW_PATH/ytw_cover.jpg
 
 # path to audios
-# music_dir=$HOME/Music
-music_dir=/mnt/music
+music_dir=$HOME/Music
+# music_dir=/mnt/music
 
 # path to videos
 vid_dir=$HOME/Videos
-vid_dir=/mnt/vid/clip
+# vid_dir=/mnt/vid/clip
 
 # launch rofi with these arguments
 rofi_args="-dmenu -i -matching fuzzy -p "
@@ -53,36 +53,36 @@ main(){
 
     # If playlist file doesn't exists, create it
     [[ -z "$vidlist" ]] && { touch $vidlist; }
-    
+
     choices=" Search\n Playlist\n陼 Edit playlist"
     choice=$(echo -ne ${choices} | $menu)
     fin=$(echo ${choice} | awk '{print $2}')
     case $fin in
-	"Search")
-	    search
-	    ;;
-	"Playlist")
-	    playlist
-	    ;;
-	"Edit playlist")
-	    $TERMINAL -e $EDITOR $vidlist
-	    ;;
+    "Search")
+        search
+        ;;
+    "Playlist")
+        playlist
+        ;;
+    "Edit playlist")
+        $TERMINAL -e $EDITOR $vidlist
+        ;;
     esac
 }
 
 generate(){
     # search on youtube with rofi
     sh $YTW_PATH/utils -s
-    
+
     # generate values
     sh $YTW_PATH/utils -m
-    
+
     # prompt the user to choose from generated values
     choice=$(cat $YTW_PATH/choices | $menu)
-    
+
     # exit if choice doesn't exist
     [[ -z "$choice" ]] && { exit 1; }
-    
+
     # get information about video
     id=$(echo -e ${choice} | awk '{print $1}' )
     infos=$(cat $YTW_PATH/values)
@@ -92,10 +92,10 @@ generate(){
     title=$(echo $infos | jq .videos[$id].title | sed 's/"//g')
     views=$(echo $infos | jq .videos[$id].views | sed 's/"//g')
     url=$(echo $infos | jq .videos[$id].url_suffix | sed 's/"//g')
-    
+
     # download thumbnail for notifications
     curl -Ss $thumbnail -o $YTW_PATH/ytw_cover.jpg
-    
+
 }
 
 search(){
@@ -105,7 +105,7 @@ search(){
 
     select=" Play\n螺 Add\n Audio\n Video\n"
     selmen=$(echo -ne "${select} \nTitle:${title}\nChannel:${channel}\n${views}\nDuration:${dur}" | $menu)
-    
+
     # Remove icons from the selected option
     fin=$(echo ${selmen,,} | awk '{print $2}')
     echo $fin
@@ -149,12 +149,12 @@ playlist(){
 
 # handle urls
 case $1 in
-    
+
     # download as audio
     *youtube.com* | *youtu.be* | *soundcloud.com*)
 	youtube-dl $ytdl_args $1
 	;;
-    
+
 esac
 
 if [ -z "$1" ]; then
