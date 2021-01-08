@@ -90,7 +90,7 @@ try:
             help()
 
         elif currentArgument in ("-t", "--title"):
-            results = YoutubeSearch(sys.argv[2], max_results=1).to_json()
+            results = YoutubeSearch(sys.argv[2], max_results=15).to_json()
             print(results)
         else:
             help()

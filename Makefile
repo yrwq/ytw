@@ -6,7 +6,6 @@ all:
 	mkdir -p ${DATDIR}
 	cp src/utils ${DATDIR}
 	cp src/search.py ${DATDIR}
-	cp src/yt.py ${DATDIR}
 	cp ytw ${BINDIR}
 
 man:
