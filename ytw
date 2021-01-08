@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-#
+
+# author: yrwq
 # ytw - wrapper for youtube
 # known dependencies: mpv, rofi, youtube-dl, ttf-nerd-fonts-symbols, libnotify
 # github.com/yrwq/ytw
@@ -11,11 +12,9 @@ cover_path=$YTW_PATH/ytw_cover.jpg
 
 # path to audios
 music_dir=$HOME/Music
-# music_dir=/mnt/music
 
 # path to videos
 vid_dir=$HOME/Videos
-# vid_dir=/mnt/vid/clip
 
 # launch rofi with these arguments
 rofi_args="-dmenu -i -matching fuzzy -p "
@@ -23,14 +22,14 @@ menu="rofi $rofi_args"
 
 # in the playlist file you should seperate the url from the title with a tab
 # example:
-# title		url
+# title    url
 
 vidlist="$YTW_PATH/playlist"
 
 # audio download args
 ytdl_args="--add-metadata --embed-thumbnail \
-	--extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
-	--ignore-errors --restrict-filenames --verbose -o $music_dir/%(title)s.%(ext)s"
+    --extract-audio --audio-format mp3 --audio-quality 0 --prefer-ffmpeg \
+    --ignore-errors --restrict-filenames --verbose -o $music_dir/%(title)s.%(ext)s"
 
 # video download args
 ytdl_vid_args="-f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o $vid_dir/%(title)s.%(ext)s"
@@ -40,10 +39,10 @@ usage(){
 cat << EOF
 
 Usage:
-	ytw -l		pick from a playlist
-	ytw -s		search on youtube
-    	ytw -h		help
-	ytw <url>	download url as audio
+    ytw -l      pick from a playlist
+    ytw -s      search on youtube
+    ytw -h      help
+    ytw <url>   download url as audio
 
 EOF
 }
@@ -58,14 +57,12 @@ main(){
     choice=$(echo -ne ${choices} | $menu)
     fin=$(echo ${choice} | awk '{print $2}')
     case $fin in
-    "Search")
-        search
-        ;;
-    "Playlist")
-        playlist
-        ;;
-    "Edit playlist")
-        $TERMINAL -e $EDITOR $vidlist
+        "Search") search ;;
+        "Playlist") playlist ;;
+        "Edit playlist")
+            [ ! $TERMINAL ] && TERMINAL=st
+            [ ! $EDITOR ] && EDITOR=vim
+            $TERMINAL -e $EDITOR $vidlist
         ;;
     esac
 }
@@ -117,29 +114,29 @@ search(){
 
     case $fin in
 
-	# Play the video with mpv
-	play)
-	    notify-send -i $cover_path "   Now playing" "${title}"
-  	    mpv "$link"
-	    ;;
+    # Play the video with mpv
+    play)
+        notify-send -i $cover_path "   Now playing" "${title}"
+        mpv "$link"
+        ;;
 
-	# Download and play audio
-	*audio*)
-	    notify-send -i $cover_path "   Downloading" "${title}"
-	    mpv "$link" &
-	    youtube-dl $ytdl_args $link
-	    ;;
+    # Download and play audio
+    *audio*)
+        notify-send -i $cover_path "   Downloading" "${title}"
+        mpv "$link" &
+        youtube-dl $ytdl_args $link
+        ;;
 
-	*video*)
-	    notify-send -i $cover_path "   Downloading" "${title}"
-	    youtube-dl $ytdl_vid_args $link
-	    ;;
-	add)
-	    mpv "$link" &
-	    echo -ne $title'	'$link'\n' >> $vidlist
-	    notify-send -i $cover_path "螺  Added" "${title}"
-	    ;;
-    esac
+    *video*)
+        notify-send -i $cover_path "   Downloading" "${title}"
+        youtube-dl $ytdl_vid_args $link
+        ;;
+    add)
+        mpv "$link" &
+        echo -ne $title'	'$link'\n' >> $vidlist
+        notify-send -i $cover_path "螺  Added" "${title}"
+        ;;
+esac
 }
 
 # I don't understand what's going on here so don't ask me.
@@ -152,8 +149,8 @@ case $1 in
 
     # download as audio
     *youtube.com* | *youtu.be* | *soundcloud.com*)
-	youtube-dl $ytdl_args $1
-	;;
+        youtube-dl $ytdl_args $1
+    ;;
 
 esac
 
@@ -164,17 +161,17 @@ fi
 # arguments
 while getopts 'lsdvhf' flag; do
     case "${flag}" in
-	l)
-	    playlist
-	    ;;
-	s)
-	    search
-	    ;;
-	h)
-	    usage
-	    ;;
-	*)
-	    usage
-	    ;;
+    l)
+        playlist
+        ;;
+    s)
+        search
+        ;;
+    h)
+        usage
+        ;;
+    *)
+        usage
+        ;;
     esac
 done

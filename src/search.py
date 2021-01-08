@@ -1,6 +1,63 @@
 #!/usr/bin/env python
-import json, sys, getopt
-from yt import YoutubeSearch
+import sys
+import getopt
+import requests
+import urllib.parse
+import json
+
+class YoutubeSearch:
+    def __init__(self, search_terms: str, max_results=None):
+        self.search_terms = search_terms
+        self.max_results = max_results
+        self.videos = self.search()
+
+    def search(self):
+        encoded_search = urllib.parse.quote(self.search_terms)
+        BASE_URL = "https://youtube.com"
+        url = f"{BASE_URL}/results?search_query={encoded_search}"
+        response = requests.get(url).text
+        while "ytInitialData" not in response:
+            response = requests.get(url).text
+        results = self.parse_html(response)
+        if self.max_results is not None and len(results) > self.max_results:
+            return results[: self.max_results]
+        return results
+
+    def parse_html(self, response):
+        results = []
+        start = (
+            response.index("ytInitialData")
+            + len("ytInitialData")
+            + 3
+        )
+        end = response.index("};", start) + 1
+        json_str = response[start:end]
+        data = json.loads(json_str)
+
+        videos = data["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"][
+            "sectionListRenderer"
+        ]["contents"][0]["itemSectionRenderer"]["contents"]
+
+        for video in videos:
+            res = {}
+            if "videoRenderer" in video.keys():
+                video_data = video.get("videoRenderer", {})
+                res["id"] = video_data.get("videoId", None)
+                res["thumbnails"] = [thumb.get("url", None) for thumb in video_data.get("thumbnail", {}).get("thumbnails", [{}])]
+                res["title"] = video_data.get("title", {}).get("runs", [[{}]])[0].get("text", None)
+                res["channel"] = video_data.get("longBylineText", {}).get("runs", [[{}]])[0].get("text", None)
+                res["duration"] = video_data.get("lengthText", {}).get("simpleText", 0)
+                res["views"] = video_data.get("viewCountText", {}).get("simpleText", 0)
+                res["url_suffix"] = video_data.get("navigationEndpoint", {}).get("commandMetadata", {}).get("webCommandMetadata", {}).get("url", None)
+                results.append(res)
+        return results
+
+    def to_dict(self):
+        return self.videos
+
+    def to_json(self):
+        return json.dumps({"videos": self.videos}, indent=4)
+
 
 argumentList = sys.argv[1:]
 
@@ -10,34 +67,34 @@ options = "ht:"
 # Long options
 long_options = ["help", "title"]
 
-# Help message
+
 def help():
-    print ("\nYoutube Search \n")
-    print ("Usage:")
-    print ("        -t or --title   search with title")
-    print ("        -h or --help    show this useful help message ...")
-    print ("")
-    print ("Example:")
-    print ('        -t "interesting title"')
-    print ("")
-    
+    print("\nYoutube Search \n")
+    print("Usage:")
+    print("        -t or --title   search with title")
+    print("        -h or --help    show this useful help message ...")
+    print("")
+    print("Example:")
+    print('        -t "interesting title"')
+    print("")
+
+
 try:
     # Parsing argument
     arguments, values = getopt.getopt(argumentList, options, long_options)
 
     # checking each argument
     for currentArgument, currentValue in arguments:
-        
+
         if currentArgument in ("-h", "--help"):
             help()
-            
+
         elif currentArgument in ("-t", "--title"):
-            results = YoutubeSearch(sys.argv[2], max_results=15).to_json()
+            results = YoutubeSearch(sys.argv[2], max_results=1).to_json()
             print(results)
         else:
             help()
-            
+
 except getopt.error as err:
     # output error, and return with an error code
-    print (str(err))
-    
+    print(str(err))

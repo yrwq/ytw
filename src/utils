@@ -1,46 +1,50 @@
 #!/usr/bin/env bash
 
+#
+# Utils for ytw
+#
+
 YTW_PATH=$HOME/.local/share/ytw
 values=$YTW_PATH/values
 
 search(){
     # prompt the user for a video title
     search="$(rofi -dmenu -i -p )"
-    
+
     [[ -z "$search" ]] && { exit 1; }
-    
+
     # put the title between '
     search="'$search'"
-    
+
     [[ -z "$search" ]] && { exit 1; }
 
     [ -e $values ] && rm -rf $YTW_PATH/values
     [ -e $values ] && rm -rf $YTW_PATH/choices
-    
+
     python $YTW_PATH/search.py -t "$search" > $YTW_PATH/values
 }
 
 duration(){
     for i in {1..15}
     do
-	dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
-	echo $dur
+    dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
+    echo $dur
     done
 }
 
 list(){
     for i in {1..15}
     do
-	list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
-	echo $list
+    list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
+    echo $list
     done
 }
 
 thumbnails(){
     for i in {1..15}
     do
-	thumbs=$(cat $values | jq .videos[$i].thumbnails | sed 's/"//g' )
-	echo $thumbs
+    thumbs=$(cat $values | jq .videos[$i].thumbnails | sed 's/"//g' )
+    echo $thumbs
     done
 }
 
@@ -48,32 +52,16 @@ main(){
     [ -e $values ] && rm -rf $YTW_PATH/choices
     for i in {0..14}
     do
-	# duration of the video in min:sec
-	dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
-	
-	# title
-	list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
-	
-	echo -e $i'	'$list >> $YTW_PATH/choices
-	
+        dur=$(cat $values | jq .videos[$i].duration | sed 's/"//g')
+        list=$(cat $values | jq .videos[$i].title | sed 's/"//g')
+        echo -e $i' '$list >> $YTW_PATH/choices
     done
 }
 
 case $1 in
-	# get the whole title
-    -t)
-	thumbnails
-	;;
-    -d)
-	duration
-	;;
-    -l)
-	list
-	;;
-    -s)
-	search
-	;;
-    -m)
-	main
-	;;
+    -t) thumbnails ;;
+    -d) duration ;;
+    -l) list ;;
+    -s) search ;;
+    -m) main ;;
 esac
